@@ -1,13 +1,13 @@
 [
 	clase(top, nil, [], []),
-	clase(comestible, top, [graspable,not(on_discount)], []),
+	clase(comestible, top, [], []),
 	clase(food, comestible, [], []),
-	clase(cereal, food, [inv=>0,shelf=>p4], []),
-	clase(drink, comestible, [age=>all], []),
-	clase(soda, drink, [inv=>1,shelf=>p4], []),
-	clase(beer, drink, [age=>18,inv=>1,shelf=>sh2], []),
-	clase(dairy, comestible, [inv=>1,shelf=>p4], []),
-
+	clase(cereal, food, [], []),
+	clase(drink, comestible, [], []),
+	clase(soda, drink, [], []),
+	clase(beer, drink, [], []),
+	clase(dairy, comestible, [], []),
+	
 	objeto(c1, cereal, [brand=>kellogs], []),
 	objeto(s1, soda, [brand=>coke], []),
 	objeto(b1, beer, [brand=>heineken], []),
