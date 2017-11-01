@@ -10,17 +10,8 @@
 % Alejandro Ehecatl Morales Huitrón
 % =============================================================================
 
-:- [decision].
-:- [diagnostico].
-:- [planeacion].
-:- [robot].
-:- [simulador].
-
-:- op(800, xfx, '=>').
-
-inf_delib(NombreBase) :-
-	atom_concat('bases/', NombreBase, Ruta),
-	open(Ruta, read, Archivo),
-	read(Archivo, Base),
-	close(Archivo),
-	simulador(Base, NuevaBase).
+simulador(Base, NuevaBase) :-
+	diagnostico(Base, BaseA),
+	decision(BaseA, BaseB),
+	planeacion(BaseB, BaseC),
+	ejecutarPlan(BaseC, NuevaBase).
