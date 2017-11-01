@@ -38,18 +38,22 @@
 	objeto(colocar, acciones_robot, [
 		costo => [[inicio, e1, 5], [inicio, e2, 5], [inicio, e3, 5],
 			[e1, e2, 15], [e2, e3, 15], [e3, e1, 15]],
+		exito => [[_, 0.9]],
 		recompensa => 10
 	], []),
 	objeto(buscar, acciones_robot, [
 		costo => [[_, 2]],
+		exito => [[_, 0.9]],
 		recompensa => 5
 	], []),
 	objeto(agarrar, acciones_robot, [
 		costo => [[_, 3]],
+		exito => [[_, 0.7]],
 		recompensa => 15
 	], []),
 	objeto(colocar, acciones_robot, [
 		costo => [[_, 3]],
+		exito => [[_, 0.8]],
 		recompensa => 15
 	], []),
 	objeto(entregar, decisiones_robot, [], []),
