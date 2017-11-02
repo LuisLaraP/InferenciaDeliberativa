@@ -15,8 +15,10 @@ simulador :-
 	diagnostico(Base, BaseA),
 	decision(BaseA, BaseB),
 	planeacion(BaseB, BaseC),
+	retract(base(_)),
+	assert(base(BaseC)),
 	repeat,
-	(ejecutarSigAccion(BaseC, BaseD)
-	-> retract(base(_)), assert(base(BaseD)), fail
+	(base(BaseAntes), ejecutarSigAccion(BaseAntes, BaseDespues)
+	-> retract(base(_)), assert(base(BaseDespues)), fail
 	; !
 	).
