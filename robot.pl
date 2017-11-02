@@ -10,4 +10,4 @@
 % Alejandro Ehecatl Morales Huitrón
 % =============================================================================
 
-ejecutarPlan(Base, NuevaBase).
+ejecutarSigAccion(Base, NuevaBase).
