@@ -10,4 +10,7 @@
 % Alejandro Ehecatl Morales Huitrón
 % =============================================================================
 
-diagnostico(Base, NuevaBase).
+% Módulo de diagnóstico.
+%	Arg. 1 - Base de entrada.
+%	Arg. 2 - Base de salida.
+diagnostico(_, _).

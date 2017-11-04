@@ -10,4 +10,7 @@
 % Alejandro Ehecatl Morales Huitrón
 % =============================================================================
 
-planeacion(Base, NuevaBase).
+% Módulo de planeación.
+%	Arg. 1 - Base de entrada.
+%	Arg. 2 - Base de salida.
+planeacion(_, _).

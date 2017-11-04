@@ -10,4 +10,7 @@
 % Alejandro Ehecatl Morales Huitrón
 % =============================================================================
 
-decision(Base, NuevaBase).
+% Módulo de toma de decisiones.
+%	Arg. 1 - Base de entrada.
+%	Arg. 2 - Base de salida.
+decision(_, _).
