@@ -10,15 +10,12 @@
 % Alejandro Ehecatl Morales Huitrón
 % =============================================================================
 
-simulador :-
-	base(Base),
+simulador(Base, Base) :-
+	\+ accionPendiente(Base).
+simulador(Base, NuevaBase) :-
+	accionPendiente(Base),
 	diagnostico(Base, BaseA),
 	decision(BaseA, BaseB),
 	planeacion(BaseB, BaseC),
-	retract(base(_)),
-	assert(base(BaseC)),
-	repeat,
-	(base(BaseAntes), ejecutarSigAccion(BaseAntes, BaseDespues)
-	-> retract(base(_)), assert(base(BaseDespues)), fail
-	; !
-	).
+	ejecutarPlan(BaseC, BasePlan),
+	simulador(BasePlan, NuevaBase).

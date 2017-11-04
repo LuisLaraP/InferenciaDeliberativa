@@ -10,8 +10,10 @@
 % Alejandro Ehecatl Morales Huitrón
 % =============================================================================
 
-% Simula la ejecución de la siguiente acción en la agenda del robot, y la
-% retira de la misma. Si la ejecución de la acción fracasa, la acción no se
-% elimina de la agenda, pero el predicado es verdadero. El predicado falla
-% cuando ya no hay ninguna acción por realizar.
-ejecutarSigAccion(Base, NuevaBase).
+% Este predicado es verdadero si el robot aún tiene acciones pendientes por
+% realizar.
+accionPendiente(_).
+
+% Ejecuta las acciones contenidas en la agenda del robot, hasta que éstas se
+% agoten o bien, hasta que ocurra un error.
+ejecutarPlan(_, _).

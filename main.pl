@@ -23,9 +23,4 @@ inf_delib(NombreBase) :-
 	open(Ruta, read, Archivo),
 	read(Archivo, Base),
 	close(Archivo),
-	assert(base(Base)),
-	repeat,
-	(simulador
-	-> !
-	; fail
-	).
+	simulador(Base, _).
