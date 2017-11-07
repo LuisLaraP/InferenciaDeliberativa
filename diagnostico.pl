@@ -13,4 +13,4 @@
 % Módulo de diagnóstico.
 %	Arg. 1 - Base de entrada.
 %	Arg. 2 - Base de salida.
-diagnostico(_, _).
+diagnostico(X, X).

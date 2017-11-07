@@ -13,4 +13,4 @@
 % Módulo de planeación.
 %	Arg. 1 - Base de entrada.
 %	Arg. 2 - Base de salida.
-planeacion(_, _).
+planeacion(X, X).

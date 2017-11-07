@@ -19,6 +19,7 @@
 :- [simulador].
 
 :-['conceptual/listas'].
+:-['conceptual/utilidades'].
 
 :- initialization main.
 
