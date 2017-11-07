@@ -11,12 +11,14 @@
 % Alejandro Ehecatl Morales Huitrón
 % =============================================================================
 
+:- op(800, xfx, '=>').
+
 :- [decision].
 :- [diagnostico].
 :- [planeacion].
 :- [simulador].
 
-:- op(800, xfx, '=>').
+:-['conceptual/listas'].
 
 :- initialization main.
 

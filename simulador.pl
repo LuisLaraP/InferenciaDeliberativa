@@ -22,6 +22,9 @@ simulador(Base, NuevaBase) :-
 
 % Este predicado es verdadero si el robot aún tiene acciones pendientes por
 % realizar.
+accionPendiente(Base) :-
+	buscar(objeto(agenda, _, _, _), Base, objeto(_, _, [], _)), !,
+	fail.
 accionPendiente(_).
 
 % Ejecuta las acciones contenidas en la agenda del robot, hasta que éstas se
