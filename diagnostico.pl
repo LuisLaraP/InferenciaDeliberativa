@@ -14,3 +14,6 @@
 %	Arg. 1 - Base de entrada.
 %	Arg. 2 - Base de salida.
 diagnostico(_, _).
+
+obtenDiagnostico(LocRestantes,ObjRestantes) :-
+	
