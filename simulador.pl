@@ -10,10 +10,12 @@
 % Alejandro Ehecatl Morales Huitrón
 % =============================================================================
 
+:- op(800, xfx, '=>').
+
 simulador(Base, Base) :-
-	\+ accionPendiente(Base).
+	\+ accionPendiente(Base), !.
 simulador(Base, NuevaBase) :-
-	accionPendiente(Base),
+	writeln('Infiriendo'),
 	diagnostico(Base, BaseA),
 	decision(BaseA, BaseB),
 	planeacion(BaseB, BaseC),
@@ -30,12 +32,28 @@ accionPendiente(_).
 % Ejecuta las acciones contenidas en la agenda del robot, hasta que éstas se
 % agoten o bien, hasta que ocurra un error.
 ejecutarPlan(Base, Base) :-
-	\+ accionPendiente(Base).
+	\+ accionPendiente(Base), !.
 ejecutarPlan(Base, NuevaBase) :-
 	buscar(objeto(agenda, _, _, _), Base, objeto(_, P, [Acc | Resto], R)),
 	reemplazar(
 		objeto(agenda, P, [Acc | Resto], R),
 		objeto(agenda, P, Resto, R),
-		Base, BaseAccion),
-	escribir(['Ejecutando la acción ', Acc]),
-	ejecutarPlan(BaseAccion, NuevaBase).
+		Base, BasePre),
+	write(Acc),
+	write("\t\t..."),
+	ejecutarAccion(Acc, BasePre, BaseAccion),
+	ejecutarPlan(BaseAccion, NuevaBase), !.
+
+% Acciones --------------------------------------------------------------------
+
+ejecutarAccion(Accion, Base, Base) :-
+	Accion =.. [Nombre | Args],
+	buscar(objeto(Nombre, acciones_robot, _, _), Base, objeto(_, _, Props, _)),
+	buscar(exito => _, Props, _ => Exitos),
+	agregar(P, Args, PatronExito),
+	buscar(PatronExito, Exitos, _),
+	X is random_float,
+	X > P,
+	writeln('fracaso'), !.
+ejecutarAccion(_, Base, Base) :-
+	writeln('éxito').
