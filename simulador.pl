@@ -29,10 +29,13 @@ accionPendiente(_).
 
 % Ejecuta las acciones contenidas en la agenda del robot, hasta que éstas se
 % agoten o bien, hasta que ocurra un error.
+ejecutarPlan(Base, Base) :-
+	\+ accionPendiente(Base).
 ejecutarPlan(Base, NuevaBase) :-
 	buscar(objeto(agenda, _, _, _), Base, objeto(_, P, [Acc | Resto], R)),
 	reemplazar(
 		objeto(agenda, P, [Acc | Resto], R),
 		objeto(agenda, P, Resto, R),
-		Base, NuevaBase),
-	escribir(['Ejecutando la acción ', Acc]).
+		Base, BaseAccion),
+	escribir(['Ejecutando la acción ', Acc]),
+	ejecutarPlan(BaseAccion, NuevaBase).
