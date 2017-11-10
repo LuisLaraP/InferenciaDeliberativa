@@ -35,14 +35,15 @@ ejecutarPlan(Base, Base) :-
 	\+ accionPendiente(Base), !.
 ejecutarPlan(Base, NuevaBase) :-
 	buscar(objeto(agenda, _, _, _), Base, objeto(_, P, [Acc | Resto], R)),
+	write(Acc),
+	write("\t\t..."),
+	ejecutarAccion(Acc, Base, BaseAccion),
 	reemplazar(
 		objeto(agenda, P, [Acc | Resto], R),
 		objeto(agenda, P, Resto, R),
-		Base, BasePre),
-	write(Acc),
-	write("\t\t..."),
-	ejecutarAccion(Acc, BasePre, BaseAccion),
-	ejecutarPlan(BaseAccion, NuevaBase), !.
+		BaseAccion, BaseR),
+	ejecutarPlan(BaseR, NuevaBase), !.
+ejecutarPlan(Base, Base).
 
 % Acciones --------------------------------------------------------------------
 
@@ -54,6 +55,6 @@ ejecutarAccion(Accion, Base, Base) :-
 	buscar(PatronExito, Exitos, _),
 	X is random_float,
 	X > P,
-	writeln('fracaso'), !.
+	writeln('fracaso'), !, fail.
 ejecutarAccion(_, Base, Base) :-
 	writeln('éxito').
