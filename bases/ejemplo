@@ -18,11 +18,11 @@
 	clase(comida, comestible, [estante => e2], []),
 	clase(pan, comestible, [estante => e3], []),
 
-	objeto(cerveza1, bebida, [], []),
-	objeto(refresco1, bebida, [], []),
-	objeto(sopa1, comida, [], []),
-	objeto(cereal1, comida, [], []),
-	objeto(galletas1, pan, [], []),
+	objeto([cerveza1], bebida, [], []),
+	objeto([refresco1], bebida, [], []),
+	objeto([sopa1], comida, [], []),
+	objeto([cereal1], comida, [], []),
+	objeto([galletas1], pan, [], []),
 
 % Conocimiento factual --------------------------------------------------------
 	clase(acciones, top, [], []),
@@ -33,50 +33,50 @@
 	clase(observaciones, estados, [], []),
 	clase(procesos, top, [], []),
 
-	objeto(mover, acciones_empleado, [], []),
-	objeto(colocar, acciones_empleado, [], []),
-	objeto(colocar, acciones_robot, [
+	objeto([mover], acciones_empleado, [], []),
+	objeto([colocar], acciones_empleado, [], []),
+	objeto([colocar], acciones_robot, [
 		costo => [[inicio, e1, 5], [inicio, e2, 5], [inicio, e3, 5],
 			[e1, e2, 15], [e2, e3, 15], [e3, e1, 15]],
 		exito => [[_, 0.9]],
 		recompensa => 10
 	], []),
-	objeto(buscar, acciones_robot, [
+	objeto([buscar], acciones_robot, [
 		costo => [[_, 2]],
 		exito => [[_, 0.9]],
 		recompensa => 5
 	], []),
-	objeto(agarrar, acciones_robot, [
+	objeto([agarrar], acciones_robot, [
 		costo => [[_, 3]],
 		exito => [[_, 0.7]],
 		recompensa => 15
 	], []),
-	objeto(colocar, acciones_robot, [
+	objeto([colocar], acciones_robot, [
 		costo => [[_, 3]],
 		exito => [[_, 0.8]],
 		recompensa => 15
 	], []),
-	objeto(entregar, decisiones_robot, [], []),
-	objeto(reacomodar, decisiones_robot, [], []),
-	objeto(creencia, estados, [e1 => [cerveza1, refresco1], e2 => [sopa1, cereal1], e3 => [galletas1]], []),
-	objeto(diagnostico, procesos, [], []),
-	objeto(decision, procesos, [], []),
-	objeto(agenda, procesos, [], []),
+	objeto([entregar], decisiones_robot, [], []),
+	objeto([reacomodar], decisiones_robot, [], []),
+	objeto([creencia], estados, [e1 => [cerveza1, refresco1], e2 => [sopa1, cereal1], e3 => [galletas1]], []),
+	objeto([diagnostico], procesos, [], []),
+	objeto([decision], procesos, [], []),
+	objeto([agenda], procesos, [], []),
 
 % Mundo -----------------------------------------------------------------------
 	clase(ubicaciones, top, [], []),
 
-	objeto(inicio, ubicaciones, [], []),
-	objeto(e1, ubicaciones, [], []),
-	objeto(e2, ubicaciones, [], []),
-	objeto(e3, ubicaciones, [], []),
+	objeto([inicio], ubicaciones, [], []),
+	objeto([e1], ubicaciones, [], []),
+	objeto([e2], ubicaciones, [], []),
+	objeto([e3], ubicaciones, [], []),
 
-	objeto(escenario, top, [
+	objeto([escenario], top, [
 		e1 => [refresco1, cerveza1, sopa1],
 		e2 => [galletas1],
 		e3 => [cereal1]
 	], []),
-	objeto(robot, top, [
+	objeto([robot], top, [
 		brazo_derecho => nil,
 		brazo_izquierdo => nil,
 		posicion => inicio
