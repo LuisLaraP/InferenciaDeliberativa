@@ -1,3 +1,4 @@
+#! /usr/bin/swipl -f -q
 % =============================================================================
 % Universidad Nacional Autónoma de México
 % Posgrado en Ciencia e Ingeniería de la Computación
@@ -10,13 +11,26 @@
 % Alejandro Ehecatl Morales Huitrón
 % =============================================================================
 
+:- op(800, xfx, '=>').
+
 :- [decision].
 :- [diagnostico].
 :- [planeacion].
-:- [robot].
 :- [simulador].
 
-:- op(800, xfx, '=>').
+:-['conceptual/listas'].
+:-['conceptual/utilidades'].
+
+:- initialization main.
+
+main :-
+	current_prolog_flag(argv, Args),
+	main(Args).
+
+main([]).
+main([NombreBase | _]) :-
+	inf_delib(NombreBase),
+	halt.
 
 inf_delib(NombreBase) :-
 	atom_concat('bases/', NombreBase, Ruta),
