@@ -25,7 +25,7 @@ simulador(Base, NuevaBase) :-
 % Este predicado es verdadero si el robot aún tiene acciones pendientes por
 % realizar.
 accionPendiente(Base) :-
-	buscar(objeto(agenda, _, _, _), Base, objeto(_, _, [], _)), !,
+	buscar(objeto([agenda], _, _, _), Base, objeto(_, _, [], _)), !,
 	fail.
 accionPendiente(_).
 
@@ -34,13 +34,13 @@ accionPendiente(_).
 ejecutarPlan(Base, Base) :-
 	\+ accionPendiente(Base), !.
 ejecutarPlan(Base, NuevaBase) :-
-	buscar(objeto(agenda, _, _, _), Base, objeto(_, P, [Acc | Resto], R)),
+	buscar(objeto([agenda], _, _, _), Base, objeto(_, P, [Acc | Resto], R)),
 	write(Acc),
 	write("\t\t..."),
 	ejecutarAccion(Acc, Base, BaseAccion),
 	reemplazar(
-		objeto(agenda, P, [Acc | Resto], R),
-		objeto(agenda, P, Resto, R),
+		objeto([agenda], P, [Acc | Resto], R),
+		objeto([agenda], P, Resto, R),
 		BaseAccion, BaseR),
 	ejecutarPlan(BaseR, NuevaBase), !.
 ejecutarPlan(Base, Base).
@@ -49,7 +49,7 @@ ejecutarPlan(Base, Base).
 
 ejecutarAccion(Accion, Base, Base) :-
 	Accion =.. [Nombre | Args],
-	buscar(objeto(Nombre, acciones_robot, _, _), Base, objeto(_, _, Props, _)),
+	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
 	buscar(exito => _, Props, _ => Exitos),
 	agregar(P, Args, PatronExito),
 	buscar(PatronExito, Exitos, _),
