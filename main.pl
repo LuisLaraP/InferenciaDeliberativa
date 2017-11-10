@@ -19,6 +19,7 @@
 :- [simulador].
 
 :-['conceptual/listas'].
+:-['conceptual/modificar'].
 :-['conceptual/utilidades'].
 
 :- initialization main.
@@ -37,4 +38,6 @@ inf_delib(NombreBase) :-
 	open(Ruta, read, Archivo),
 	read(Archivo, Base),
 	close(Archivo),
-	simulador(Base, _).
+	simulador(Base, BaseFinal),
+	buscar(objeto([robot], _, _, _), BaseFinal, objeto(_, _, Props,_)),
+	writeln(Props).

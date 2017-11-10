@@ -56,5 +56,10 @@ ejecutarAccion(Accion, Base, Base) :-
 	X is random_float,
 	X > P,
 	writeln('fracaso'), !, fail.
+
+ejecutarAccion(mover(_, Fin), Base, NuevaBase) :-
+	modificar_propiedad(robot, posicion, Fin, Base, NuevaBase),
+	writeln('éxito'), !.
+
 ejecutarAccion(_, Base, Base) :-
 	writeln('éxito').
