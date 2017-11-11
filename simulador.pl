@@ -32,7 +32,8 @@ simulador(Base, NuevaBase) :-
 % Este predicado es verdadero si el robot aún tiene acciones pendientes por
 % realizar.
 accionPendiente(Base) :-
-	buscar(objeto([agenda], _, _, _), Base, objeto(_, _, [], _)), !,
+	buscar(objeto([agenda], _, _, _), Base, objeto(_, _, [], _)),
+	\+ propiedadesObjeto(diagnostico, Base, []), !,
 	fail.
 accionPendiente(_).
 
