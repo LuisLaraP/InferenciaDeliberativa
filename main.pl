@@ -42,8 +42,4 @@ inf_delib(NombreBase) :-
 	open(Ruta, read, Archivo),
 	read(Archivo, Base),
 	close(Archivo),
-	simulador(Base, BaseFinal),
-	buscar(objeto([robot], _, _, _), BaseFinal, objeto(_, _, Props,_)),
-	writeln(Props),
-	buscar(objeto([escenario], _, _, _), BaseFinal, objeto(_, _, Esc,_)),
-	writeln(Esc).
+	simulador(Base, _).

@@ -15,10 +15,17 @@
 simulador(Base, Base) :-
 	\+ accionPendiente(Base), !.
 simulador(Base, NuevaBase) :-
-	writeln('Infiriendo'),
+	write('Diagnóstico '),
+	writeln('=========================================================='),
 	diagnostico(Base, BaseA),
+	write('Toma de decisión '),
+	writeln('====================================================='),
 	decision(BaseA, BaseB),
+	write('Planeación '),
+	writeln('==========================================================='),
 	planeacion(BaseB, BaseC),
+	write('Ejecutando plan '),
+	writeln('======================================================'),
 	ejecutarPlan(BaseC, BasePlan),
 	simulador(BasePlan, NuevaBase).
 
