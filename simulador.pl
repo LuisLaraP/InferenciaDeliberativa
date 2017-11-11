@@ -57,10 +57,6 @@ ejecutarAccion(Accion, Base, Base) :-
 	X > P,
 	writeln('fracaso'), !, fail.
 
-ejecutarAccion(mover(_, Fin), Base, NuevaBase) :-
-	modificar_propiedad(robot, posicion, Fin, Base, NuevaBase),
-	writeln('éxito'), !.
-
 ejecutarAccion(agarrar(Objeto), Base, NuevaBase) :-
 	objetoDerecho(Base, nil),
 	posicionActual(Base, Posicion),
@@ -73,6 +69,24 @@ ejecutarAccion(agarrar(Objeto), Base, NuevaBase) :-
 	posicionActual(Base, Posicion),
 	eliminarObjeto(Objeto, Posicion, Base, BaseA),
 	modificar_propiedad(robot, brazo_izquierdo, Objeto, BaseA, NuevaBase),
+	writeln('éxito'), !.
+
+ejecutarAccion(colocar(Objeto), Base, NuevaBase) :-
+	\+ objetoDerecho(Base, nil),
+	posicionActual(Base, Posicion),
+	agregarObjeto(Objeto, Posicion, Base, BaseA),
+	modificar_propiedad(robot, brazo_derecho, nil, BaseA, NuevaBase),
+	writeln('éxito'), !.
+
+ejecutarAccion(colocar(Objeto), Base, NuevaBase) :-
+	\+ objetoIzquierdo(Base, nil),
+	posicionActual(Base, Posicion),
+	agregarObjeto(Objeto, Posicion, Base, BaseA),
+	modificar_propiedad(robot, brazo_izquierdo, nil, BaseA, NuevaBase),
+	writeln('éxito'), !.
+
+ejecutarAccion(mover(_, Fin), Base, NuevaBase) :-
+	modificar_propiedad(robot, posicion, Fin, Base, NuevaBase),
 	writeln('éxito'), !.
 
 ejecutarAccion(_, Base, Base) :-

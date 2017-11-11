@@ -12,6 +12,12 @@
 
 :- op(800, xfx, '=>').
 
+agregarObjeto(Objeto, Ubicacion, Base, NuevaBase) :-
+	propiedadesObjeto(escenario, Base, Props),
+	buscar(Ubicacion => _, Props, _ => Elementos),
+	agregar(Objeto, Elementos, NElementos),
+	modificar_propiedad(escenario, Ubicacion, NElementos, Base, NuevaBase).
+
 eliminarObjeto(Objeto, Ubicacion, Base, NuevaBase) :-
 	propiedadesObjeto(escenario, Base, Props),
 	buscar(Ubicacion => _, Props, _ => Elementos),
