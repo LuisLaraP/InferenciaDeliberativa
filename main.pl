@@ -15,11 +15,15 @@
 
 :- [decision].
 :- [diagnostico].
+:- [mundo].
 :- [planeacion].
+:- [robot].
 :- [simulador].
 
+:-['conceptual/consultas'].
 :-['conceptual/listas'].
 :-['conceptual/modificar'].
+:-['conceptual/operaciones'].
 :-['conceptual/utilidades'].
 
 :- initialization main.
@@ -40,4 +44,6 @@ inf_delib(NombreBase) :-
 	close(Archivo),
 	simulador(Base, BaseFinal),
 	buscar(objeto([robot], _, _, _), BaseFinal, objeto(_, _, Props,_)),
-	writeln(Props).
+	writeln(Props),
+	buscar(objeto([escenario], _, _, _), BaseFinal, objeto(_, _, Esc,_)),
+	writeln(Esc).
