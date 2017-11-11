@@ -23,3 +23,22 @@ objetoIzquierdo(Base, Objeto) :-
 posicionActual(Base, Posicion) :-
 	propiedadesObjeto(robot, Base, Props),
 	buscar(posicion => _, Props, _ => Posicion).
+
+guardarObservacion(Observacion, Ubicacion, Base, NuevaBase) :-
+	nuevoNombreObs(Base, Id),
+	agregar(objeto([Id], observaciones, [Ubicacion => Observacion], []), Base, NuevaBase).
+
+verificarObservacion(Observacion, Ubicacion, Base) :-
+	propiedadesObjeto(creencia, Base, Props),
+	buscar(Ubicacion => _, Props, _ => Creencia),
+	eliminarTodos(Observacion, Creencia, []),
+	eliminarTodos(Creencia, Observacion, []).
+
+nuevoNombreObs(Base, NuevoId) :-
+	nuevoNombreObs(Base, 1, NuevoId).
+nuevoNombreObs(Base, Num, NuevoId) :-
+	atom_concat('observacion', Num, NuevoId),
+	\+ existeObjeto(NuevoId, Base).
+nuevoNombreObs(Base, Num, NuevoId) :-
+	Sig is Num + 1,
+	nuevoNombreObs(Base, Sig, NuevoId).

@@ -23,3 +23,7 @@ eliminarObjeto(Objeto, Ubicacion, Base, NuevaBase) :-
 	buscar(Ubicacion => _, Props, _ => Elementos),
 	eliminar(Objeto, Elementos, NElementos),
 	modificar_propiedad(escenario, Ubicacion, NElementos, Base, NuevaBase).
+
+obtenerObservacion(Ubicacion, Base, Observacion) :-
+	propiedadesObjeto(escenario, Base, Props),
+	buscar(Ubicacion => _, Props, _ => Observacion).

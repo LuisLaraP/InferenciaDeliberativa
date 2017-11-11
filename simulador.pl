@@ -71,6 +71,14 @@ ejecutarAccion(agarrar(Objeto), Base, NuevaBase) :-
 	modificar_propiedad(robot, brazo_izquierdo, Objeto, BaseA, NuevaBase),
 	writeln('éxito'), !.
 
+ejecutarAccion(buscar(Objeto), Base, NuevaBase) :-
+	posicionActual(Base, Posicion),
+	obtenerObservacion(Posicion, Base, Observacion),
+	verificarObservacion(Observacion, Posicion, Base),
+	estaEn(Observacion, Objeto),
+	guardarObservacion(Observacion, Posicion, Base, NuevaBase),
+	writeln('éxito'), !.
+
 ejecutarAccion(colocar(Objeto), Base, NuevaBase) :-
 	\+ objetoDerecho(Base, nil),
 	posicionActual(Base, Posicion),
@@ -88,6 +96,3 @@ ejecutarAccion(colocar(Objeto), Base, NuevaBase) :-
 ejecutarAccion(mover(_, Fin), Base, NuevaBase) :-
 	modificar_propiedad(robot, posicion, Fin, Base, NuevaBase),
 	writeln('éxito'), !.
-
-ejecutarAccion(_, Base, Base) :-
-	writeln('éxito').
