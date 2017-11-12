@@ -13,4 +13,14 @@
 % Módulo de planeación.
 %	Arg. 1 - Base de entrada.
 %	Arg. 2 - Base de salida.
-planeacion(X, X).
+planeacion(Base, NuevaBase) :-
+	estadoInicial(Base, Inicio),
+	write("Estado inicial: "),
+	writeln(Inicio),
+	filtrar(objetoSeLlama(diagnostico), Base, Objetos),
+	agregarPropiedadObjetos(Objetos, parar, Base, NuevaBase).
+
+estadoInicial(Base, Inicio) :-
+	propiedadesObjeto(robot, Base, Robot),
+	propiedadesObjeto(creencia, Base, Mundo),
+	concatena(Robot, Mundo, Inicio).
