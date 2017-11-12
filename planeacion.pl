@@ -37,9 +37,7 @@ expandirEstado(Estado, [[A] | As], Base, Sucesores) :-
 % Definición ------------------------------------------------------------------
 
 estadoInicial(Base, Inicio) :-
-	propiedadesObjeto(robot, Base, Robot),
-	propiedadesObjeto(creencia, Base, Mundo),
-	concatena(Robot, Mundo, Inicio).
+	propiedadesObjeto(robot, Base, Inicio).
 
 funcionSucesor(mover, Estado, Base, Sucesores) :-
 	buscar(posicion => _, Estado, _ => Posicion),
