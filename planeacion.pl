@@ -20,7 +20,7 @@ planeacion(Base, NuevaBase) :-
 	write("Estado inicial: "),
 	writeln(Inicio),
 	extensionClase(acciones_robot, Base, _),
-	expandirEstado(Inicio, [[agarrar]], Base, Suc),
+	expandirEstado(Inicio, [[colocar]], Base, Suc),
 	write("Sucesores: "),
 	writeln(Suc),
 	filtrar(objetoSeLlama(diagnostico), Base, Objetos),
@@ -54,6 +54,12 @@ funcionSucesor(buscar, Estado, Base, Sucesores) :-
 	expandirBuscar(Objetos, Acciones),
 	calcularSucesores(Estado, Acciones, Sucesores).
 
+funcionSucesor(colocar, Estado, _, Sucesores) :-
+	buscar(brazo_derecho => _, Estado, _ => Der),
+	buscar(brazo_izquierdo => _, Estado, _ => Izq),
+	expandirColocar([Der, Izq], Acciones),
+	calcularSucesores(Estado, Acciones, Sucesores).
+
 funcionSucesor(mover, Estado, Base, Sucesores) :-
 	buscar(posicion => _, Estado, _ => Posicion),
 	extensionClase(ubicaciones, Base, U),
@@ -70,6 +76,12 @@ expandirAgarrar([O | Os], [agarrar(O) | Rs]):-
 expandirBuscar([], []).
 expandirBuscar([O | Os], [buscar(O) | Rs]) :-
 	expandirBuscar(Os, Rs).
+
+expandirColocar([], []).
+expandirColocar([nil | Os], Rs) :- !,
+	expandirColocar(Os, Rs).
+expandirColocar([O | Os], [colocar(O) | Rs]) :-
+	expandirColocar(Os, Rs).
 
 expandirMover(_, [], []).
 expandirMover(Posicion, [[U] | Us], [mover(Posicion, U) | Rs]) :-
@@ -93,6 +105,10 @@ calcularSucesores(Estado, [agarrar(_) | As], Rs) :-
 calcularSucesores(Estado, [buscar(O) | As], [[buscar(O), S] | Rs]) :-
 	buscar(posicion => _, Estado, _ => Posicion),
 	agregar(Posicion => [O], Estado, S),
+	calcularSucesores(Estado, As, Rs).
+calcularSucesores(Estado, [colocar(O) | As], [[colocar(O), S] | Rs]) :-
+	buscar(_ => O, Estado, Brazo => _),
+	reemplazar(Brazo => O, Brazo => nil, Estado, S),
 	calcularSucesores(Estado, As, Rs).
 calcularSucesores(Estado, [mover(I, F) | As], [[mover(I, F), S] | Rs]) :-
 	reemplazar(posicion => _, posicion => F, Estado, S),
