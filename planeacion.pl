@@ -19,8 +19,8 @@ planeacion(Base, NuevaBase) :-
 	estadoInicial(Base, Inicio),
 	write("Estado inicial: "),
 	writeln(Inicio),
-	extensionClase(acciones_robot, Base, _),
-	expandirEstado(Inicio, [[colocar]], Base, Suc),
+	extensionClase(acciones_robot, Base, Acciones),
+	expandirEstado(Inicio, Acciones, Base, Suc),
 	write("Sucesores: "),
 	writeln(Suc),
 	filtrar(objetoSeLlama(diagnostico), Base, Objetos),
@@ -89,16 +89,14 @@ expandirMover(Posicion, [[U] | Us], [mover(Posicion, U) | Rs]) :-
 
 calcularSucesores(_, [], []).
 calcularSucesores(Estado, [agarrar(O) | As], [[agarrar(O), S] | Rs]) :-
-	buscar(posicion => _, Estado, _ => Posicion),
 	buscar(brazo_derecho => _, Estado, _ => nil), !,
-	reemplazar(brazo_derecho => nil, brazo_derecho => O, Estado, Brazo),
-	eliminar(Posicion => _, Brazo, S),
+	reemplazar(brazo_derecho => nil, brazo_derecho => O, Estado, E2),
+	eliminar(_ => [_|_], E2, S),
 	calcularSucesores(Estado, As, Rs).
 calcularSucesores(Estado, [agarrar(O) | As], [[agarrar(O), S] | Rs]) :-
-	buscar(posicion => _, Estado, _ => Posicion),
 	buscar(brazo_izquierdo => _, Estado, _ => nil), !,
-	reemplazar(brazo_izquierdo => nil, brazo_derecho => O, Estado, Brazo),
-	eliminar(Posicion => _, Brazo, S),
+	reemplazar(brazo_izquierdo => nil, brazo_derecho => O, Estado, E2),
+	eliminar(_ => [_|_], E2, S),
 	calcularSucesores(Estado, As, Rs).
 calcularSucesores(Estado, [agarrar(_) | As], Rs) :-
 	calcularSucesores(Estado, As, Rs).
@@ -108,8 +106,10 @@ calcularSucesores(Estado, [buscar(O) | As], [[buscar(O), S] | Rs]) :-
 	calcularSucesores(Estado, As, Rs).
 calcularSucesores(Estado, [colocar(O) | As], [[colocar(O), S] | Rs]) :-
 	buscar(_ => O, Estado, Brazo => _),
-	reemplazar(Brazo => O, Brazo => nil, Estado, S),
+	reemplazar(Brazo => O, Brazo => nil, Estado, E2),
+	eliminar(_ => [_|_], E2, S),
 	calcularSucesores(Estado, As, Rs).
 calcularSucesores(Estado, [mover(I, F) | As], [[mover(I, F), S] | Rs]) :-
-	reemplazar(posicion => _, posicion => F, Estado, S),
+	reemplazar(posicion => _, posicion => F, Estado, E2),
+	eliminar(_ => [_|_], E2, S),
 	calcularSucesores(Estado, As, Rs).
