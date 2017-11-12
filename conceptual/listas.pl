@@ -74,7 +74,7 @@ filtrar(Condicion, [_ | R], Filtrada, Resultado) :-
 	Res = Filtrada,
 	filtrar(Condicion, R, Res, Resultado), !.
 
-% Muestra la lista dada en pantalla. Cada elemento se imprime en una línea porobjetoSeLlama(hola, objeto([hola], adios, [], [])).
+% Muestra la lista dada en pantalla. Cada elemento se imprime en una línea por
 % separado.
 %	Arg. 1 - Lista a imprimir.
 imprimirLista(Lista) :-
@@ -101,7 +101,7 @@ reemplazar(_, _, [], []).
 reemplazar(Original, Nuevo, [Original | R], [Nuevo | NuevaCola]) :-
 	reemplazar(Original, Nuevo, R, NuevaCola), !.
 reemplazar(Original, Nuevo, [C | R], [C | NuevaCola]) :-
-	reemplazar(Original, Nuevo, R, NuevaCola), !.	
+	reemplazar(Original, Nuevo, R, NuevaCola), !.
 
 %concatena dos listas
 concatena([],L,L).

@@ -20,7 +20,7 @@ planeacion(Base, NuevaBase) :-
 	write("Estado inicial: "),
 	writeln(Inicio),
 	extensionClase(acciones_robot, Base, _),
-	expandirEstado(Inicio, [[buscar]], Base, Suc),
+	expandirEstado(Inicio, [[agarrar]], Base, Suc),
 	write("Sucesores: "),
 	writeln(Suc),
 	filtrar(objetoSeLlama(diagnostico), Base, Objetos),
@@ -39,12 +39,13 @@ expandirEstado(Estado, [[A] | As], Base, Sucesores) :-
 estadoInicial(Base, Inicio) :-
 	propiedadesObjeto(robot, Base, Inicio).
 
-funcionSucesor(mover, Estado, Base, Sucesores) :-
+funcionSucesor(agarrar, Estado, _, Sucesores) :-
 	buscar(posicion => _, Estado, _ => Posicion),
-	extensionClase(ubicaciones, Base, U),
-	filtrar(\==([Posicion]), U, Ubicaciones),
-	expandirMover(Posicion, Ubicaciones, Acciones),
-	calcularSucesores(Estado, Acciones, Sucesores).
+	(buscar(Posicion => _, Estado, _ => Objetos)
+	-> expandirAgarrar(Objetos, Acciones),
+	   calcularSucesores(Estado, Acciones, Sucesores)
+	; Sucesores = []
+	).
 
 funcionSucesor(buscar, Estado, Base, Sucesores) :-
 	buscar(posicion => _, Estado, _ => Posicion),
@@ -53,21 +54,46 @@ funcionSucesor(buscar, Estado, Base, Sucesores) :-
 	expandirBuscar(Objetos, Acciones),
 	calcularSucesores(Estado, Acciones, Sucesores).
 
+funcionSucesor(mover, Estado, Base, Sucesores) :-
+	buscar(posicion => _, Estado, _ => Posicion),
+	extensionClase(ubicaciones, Base, U),
+	filtrar(\==([Posicion]), U, Ubicaciones),
+	expandirMover(Posicion, Ubicaciones, Acciones),
+	calcularSucesores(Estado, Acciones, Sucesores).
+
 % Utilidades ------------------------------------------------------------------
 
-expandirMover(_, [], []).
-expandirMover(Posicion, [[U] | Us], [mover(Posicion, U) | Rs]) :-
-	expandirMover(Posicion, Us, Rs).
+expandirAgarrar([], []).
+expandirAgarrar([O | Os], [agarrar(O) | Rs]):-
+	expandirAgarrar(Os, Rs).
 
 expandirBuscar([], []).
 expandirBuscar([O | Os], [buscar(O) | Rs]) :-
 	expandirBuscar(Os, Rs).
 
+expandirMover(_, [], []).
+expandirMover(Posicion, [[U] | Us], [mover(Posicion, U) | Rs]) :-
+	expandirMover(Posicion, Us, Rs).
+
 calcularSucesores(_, [], []).
-calcularSucesores(Estado, [mover(I, F) | As], [[mover(I, F), S] | Rs]) :-
-	reemplazar(posicion => _, posicion => F, Estado, S),
+calcularSucesores(Estado, [agarrar(O) | As], [[agarrar(O), S] | Rs]) :-
+	buscar(posicion => _, Estado, _ => Posicion),
+	buscar(brazo_derecho => _, Estado, _ => nil), !,
+	reemplazar(brazo_derecho => nil, brazo_derecho => O, Estado, Brazo),
+	eliminar(Posicion => _, Brazo, S),
+	calcularSucesores(Estado, As, Rs).
+calcularSucesores(Estado, [agarrar(O) | As], [[agarrar(O), S] | Rs]) :-
+	buscar(posicion => _, Estado, _ => Posicion),
+	buscar(brazo_izquierdo => _, Estado, _ => nil), !,
+	reemplazar(brazo_izquierdo => nil, brazo_derecho => O, Estado, Brazo),
+	eliminar(Posicion => _, Brazo, S),
+	calcularSucesores(Estado, As, Rs).
+calcularSucesores(Estado, [agarrar(_) | As], Rs) :-
 	calcularSucesores(Estado, As, Rs).
 calcularSucesores(Estado, [buscar(O) | As], [[buscar(O), S] | Rs]) :-
 	buscar(posicion => _, Estado, _ => Posicion),
 	agregar(Posicion => [O], Estado, S),
+	calcularSucesores(Estado, As, Rs).
+calcularSucesores(Estado, [mover(I, F) | As], [[mover(I, F), S] | Rs]) :-
+	reemplazar(posicion => _, posicion => F, Estado, S),
 	calcularSucesores(Estado, As, Rs).
