@@ -15,17 +15,25 @@
 simulador(Base, Base) :-
 	\+ accionPendiente(Base), !.
 simulador(Base, NuevaBase) :-
-	writeln('Infiriendo'),
+	write('Diagnóstico '),
+	writeln('=========================================================='),
 	diagnostico(Base, BaseA),
+	write('Toma de decisión '),
+	writeln('====================================================='),
 	decision(BaseA, BaseB),
+	write('Planeación '),
+	writeln('==========================================================='),
 	planeacion(BaseB, BaseC),
+	write('Ejecutando plan '),
+	writeln('======================================================'),
 	ejecutarPlan(BaseC, BasePlan),
 	simulador(BasePlan, NuevaBase).
 
 % Este predicado es verdadero si el robot aún tiene acciones pendientes por
 % realizar.
 accionPendiente(Base) :-
-	buscar(objeto([agenda], _, _, _), Base, objeto(_, _, [], _)), !,
+	buscar(objeto([agenda], _, _, _), Base, objeto(_, _, [], _)),
+	\+ propiedadesObjeto(diagnostico, Base, []), !,
 	fail.
 accionPendiente(_).
 
@@ -56,5 +64,43 @@ ejecutarAccion(Accion, Base, Base) :-
 	X is random_float,
 	X > P,
 	writeln('fracaso'), !, fail.
-ejecutarAccion(_, Base, Base) :-
-	writeln('éxito').
+
+ejecutarAccion(agarrar(Objeto), Base, NuevaBase) :-
+	objetoDerecho(Base, nil),
+	posicionActual(Base, Posicion),
+	eliminarObjeto(Objeto, Posicion, Base, BaseA),
+	modificar_propiedad(robot, brazo_derecho, Objeto, BaseA, NuevaBase),
+	writeln('éxito'), !.
+
+ejecutarAccion(agarrar(Objeto), Base, NuevaBase) :-
+	objetoIzquierdo(Base, nil),
+	posicionActual(Base, Posicion),
+	eliminarObjeto(Objeto, Posicion, Base, BaseA),
+	modificar_propiedad(robot, brazo_izquierdo, Objeto, BaseA, NuevaBase),
+	writeln('éxito'), !.
+
+ejecutarAccion(buscar(Objeto), Base, NuevaBase) :-
+	posicionActual(Base, Posicion),
+	obtenerObservacion(Posicion, Base, Observacion),
+	verificarObservacion(Observacion, Posicion, Base),
+	estaEn(Observacion, Objeto),
+	guardarObservacion(Observacion, Posicion, Base, NuevaBase),
+	writeln('éxito'), !.
+
+ejecutarAccion(colocar(Objeto), Base, NuevaBase) :-
+	\+ objetoDerecho(Base, nil),
+	posicionActual(Base, Posicion),
+	agregarObjeto(Objeto, Posicion, Base, BaseA),
+	modificar_propiedad(robot, brazo_derecho, nil, BaseA, NuevaBase),
+	writeln('éxito'), !.
+
+ejecutarAccion(colocar(Objeto), Base, NuevaBase) :-
+	\+ objetoIzquierdo(Base, nil),
+	posicionActual(Base, Posicion),
+	agregarObjeto(Objeto, Posicion, Base, BaseA),
+	modificar_propiedad(robot, brazo_izquierdo, nil, BaseA, NuevaBase),
+	writeln('éxito'), !.
+
+ejecutarAccion(mover(_, Fin), Base, NuevaBase) :-
+	modificar_propiedad(robot, posicion, Fin, Base, NuevaBase),
+	writeln('éxito'), !.

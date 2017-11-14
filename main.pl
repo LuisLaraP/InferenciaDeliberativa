@@ -15,10 +15,15 @@
 
 :- [decision].
 :- [diagnostico].
+:- [mundo].
 :- [planeacion].
+:- [robot].
 :- [simulador].
 
+:-['conceptual/consultas'].
 :-['conceptual/listas'].
+:-['conceptual/modificar'].
+:-['conceptual/operaciones'].
 :-['conceptual/utilidades'].
 :-['conceptual/consultas'].
 
