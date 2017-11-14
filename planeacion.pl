@@ -88,28 +88,28 @@ expandirMover(Posicion, [[U] | Us], [mover(Posicion, U) | Rs]) :-
 	expandirMover(Posicion, Us, Rs).
 
 calcularSucesores(_, [], []).
-calcularSucesores(Estado, [agarrar(O) | As], [[agarrar(O), S] | Rs]) :-
+calcularSucesores(Estado, [agarrar(O) | As], [nodo(Estado, agarrar(O), S) | Rs]) :-
 	buscar(brazo_derecho => _, Estado, _ => nil), !,
 	reemplazar(brazo_derecho => nil, brazo_derecho => O, Estado, E2),
 	eliminar(_ => [_|_], E2, S),
 	calcularSucesores(Estado, As, Rs).
-calcularSucesores(Estado, [agarrar(O) | As], [[agarrar(O), S] | Rs]) :-
+calcularSucesores(Estado, [agarrar(O) | As], [nodo(Estado, agarrar(O), S) | Rs]) :-
 	buscar(brazo_izquierdo => _, Estado, _ => nil), !,
 	reemplazar(brazo_izquierdo => nil, brazo_derecho => O, Estado, E2),
 	eliminar(_ => [_|_], E2, S),
 	calcularSucesores(Estado, As, Rs).
 calcularSucesores(Estado, [agarrar(_) | As], Rs) :-
 	calcularSucesores(Estado, As, Rs).
-calcularSucesores(Estado, [buscar(O) | As], [[buscar(O), S] | Rs]) :-
+calcularSucesores(Estado, [buscar(O) | As], [nodo(Estado, buscar(O), S) | Rs]) :-
 	buscar(posicion => _, Estado, _ => Posicion),
 	agregar(Posicion => [O], Estado, S),
 	calcularSucesores(Estado, As, Rs).
-calcularSucesores(Estado, [colocar(O) | As], [[colocar(O), S] | Rs]) :-
+calcularSucesores(Estado, [colocar(O) | As], [nodo(Estado, colocar(O), S) | Rs]) :-
 	buscar(_ => O, Estado, Brazo => _),
 	reemplazar(Brazo => O, Brazo => nil, Estado, E2),
 	eliminar(_ => [_|_], E2, S),
 	calcularSucesores(Estado, As, Rs).
-calcularSucesores(Estado, [mover(I, F) | As], [[mover(I, F), S] | Rs]) :-
+calcularSucesores(Estado, [mover(I, F) | As], [nodo(Estado, mover(I, F), S) | Rs]) :-
 	reemplazar(posicion => _, posicion => F, Estado, E2),
 	eliminar(_ => [_|_], E2, S),
 	calcularSucesores(Estado, As, Rs).
