@@ -61,7 +61,7 @@
 	objeto([creencia], estados, [e1 => [cerveza1, refresco1], e2 => [sopa1, cereal1], e3 => [galletas1]], []),
 	objeto([diagnostico], procesos, [], []),
 	objeto([decision], procesos, [], []),
-	objeto([agenda], procesos, [], []),
+	objeto([agenda], procesos, [mover(inicio,e1)], []),
 
 % Mundo -----------------------------------------------------------------------
 	clase(ubicaciones, top, [], []),

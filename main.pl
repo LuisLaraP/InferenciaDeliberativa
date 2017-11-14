@@ -20,6 +20,8 @@
 
 :-['conceptual/listas'].
 :-['conceptual/utilidades'].
+:-['conceptual/consultas'].
+
 
 :- initialization main.
 
