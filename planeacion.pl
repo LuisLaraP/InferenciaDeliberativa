@@ -22,7 +22,7 @@ planeacion(Base, NuevaBase) :-
 	extensionClase(acciones_robot, Base, Acciones),
 	expandirEstado(Inicio, Acciones, Base, Suc),
 	write("Sucesores: "),
-	writeln(Suc),
+	imprimirLista(Suc),
 	filtrar(objetoSeLlama(diagnostico), Base, Objetos),
 	agregarPropiedadObjetos(Objetos, parar, Base, NuevaBase).
 
@@ -37,20 +37,22 @@ expandirEstado(Estado, [[A] | As], Base, Sucesores) :-
 % Definición ------------------------------------------------------------------
 
 estadoInicial(Base, Inicio) :-
-	propiedadesObjeto(robot, Base, Inicio).
+	propiedadesObjeto(robot, Base, Robot),
+	propiedadesObjeto(creencia, Base, Creencia),
+	concatena(Robot, Creencia, E1),
+	agregar(buscado => nil, E1, Inicio).
 
 funcionSucesor(agarrar, Estado, _, Sucesores) :-
-	buscar(posicion => _, Estado, _ => Posicion),
-	(buscar(Posicion => _, Estado, _ => Objetos)
-	-> expandirAgarrar(Objetos, Acciones),
-	   calcularSucesores(Estado, Acciones, Sucesores)
-	; Sucesores = []
+	buscar(buscado => _, Estado, _ => Objeto),
+	(Objeto == nil
+	-> Sucesores = []
+	; expandirAgarrar([Objeto], Acciones),
+	  calcularSucesores(Estado, Acciones, Sucesores)
 	).
 
-funcionSucesor(buscar, Estado, Base, Sucesores) :-
+funcionSucesor(buscar, Estado, _, Sucesores) :-
 	buscar(posicion => _, Estado, _ => Posicion),
-	propiedadesObjeto(creencia, Base, Creencia),
-	buscar(Posicion => _, Creencia, _ => Objetos),
+	buscar(Posicion => _, Estado, _ => Objetos),
 	expandirBuscar(Objetos, Acciones),
 	calcularSucesores(Estado, Acciones, Sucesores).
 
@@ -90,26 +92,34 @@ expandirMover(Posicion, [[U] | Us], [mover(Posicion, U) | Rs]) :-
 calcularSucesores(_, [], []).
 calcularSucesores(Estado, [agarrar(O) | As], [nodo(Estado, agarrar(O), S) | Rs]) :-
 	buscar(brazo_derecho => _, Estado, _ => nil), !,
-	reemplazar(brazo_derecho => nil, brazo_derecho => O, Estado, E2),
-	eliminar(_ => [_|_], E2, S),
+	buscar(posicion => _, Estado, _ => Posicion),
+	buscar(Posicion => _, Estado, _ => Objetos),
+	eliminar(O, Objetos, NObjetos),
+	reemplazar(Posicion => Objetos, Posicion => NObjetos, Estado, E2),
+	reemplazar(brazo_derecho => nil, brazo_derecho => O, E2, S),
 	calcularSucesores(Estado, As, Rs).
 calcularSucesores(Estado, [agarrar(O) | As], [nodo(Estado, agarrar(O), S) | Rs]) :-
 	buscar(brazo_izquierdo => _, Estado, _ => nil), !,
-	reemplazar(brazo_izquierdo => nil, brazo_derecho => O, Estado, E2),
-	eliminar(_ => [_|_], E2, S),
+	buscar(posicion => _, Estado, _ => Posicion),
+	buscar(Posicion => _, Estado, _ => Objetos),
+	eliminar(O, Objetos, NObjetos),
+	reemplazar(Posicion => Objetos, Posicion => NObjetos, Estado, E2),
+	reemplazar(brazo_izquierdo => nil, brazo_izquierdo => O, E2, S),
 	calcularSucesores(Estado, As, Rs).
 calcularSucesores(Estado, [agarrar(_) | As], Rs) :-
 	calcularSucesores(Estado, As, Rs).
 calcularSucesores(Estado, [buscar(O) | As], [nodo(Estado, buscar(O), S) | Rs]) :-
-	buscar(posicion => _, Estado, _ => Posicion),
-	agregar(Posicion => [O], Estado, S),
+	reemplazar(buscado => _, buscado => O, Estado, S),
 	calcularSucesores(Estado, As, Rs).
 calcularSucesores(Estado, [colocar(O) | As], [nodo(Estado, colocar(O), S) | Rs]) :-
 	buscar(_ => O, Estado, Brazo => _),
+	(Brazo == brazo_derecho; Brazo == brazo_izquierdo),
 	reemplazar(Brazo => O, Brazo => nil, Estado, E2),
-	eliminar(_ => [_|_], E2, S),
+	buscar(posicion => _, Estado, _ => Posicion),
+	buscar(Posicion => _, Estado, _ => Objetos),
+	agregar(O, Objetos, NObjetos),
+	reemplazar(Posicion => Objetos, Posicion => NObjetos, E2, S),
 	calcularSucesores(Estado, As, Rs).
 calcularSucesores(Estado, [mover(I, F) | As], [nodo(Estado, mover(I, F), S) | Rs]) :-
-	reemplazar(posicion => _, posicion => F, Estado, E2),
-	eliminar(_ => [_|_], E2, S),
+	reemplazar(posicion => _, posicion => F, Estado, S),
 	calcularSucesores(Estado, As, Rs).
