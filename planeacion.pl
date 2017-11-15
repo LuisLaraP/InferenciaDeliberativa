@@ -19,10 +19,6 @@ planeacion(Base, NuevaBase) :-
 	estadoInicial(Base, Inicio),
 	write("Estado inicial: "),
 	writeln(Inicio),
-	extensionClase(acciones_robot, Base, Acciones),
-	expandirEstado(Inicio, Acciones, Base, Suc),
-	write("Sucesores: "),
-	imprimirLista(Suc),
 	filtrar(objetoSeLlama(diagnostico), Base, Objetos),
 	agregarPropiedadObjetos(Objetos, parar, Base, NuevaBase).
 
@@ -69,6 +65,15 @@ funcionSucesor(mover, Estado, Base, Sucesores) :-
 	filtrar(\==([Posicion]), U, Ubicaciones),
 	expandirMover(Posicion, Ubicaciones, Acciones),
 	calcularSucesores(Estado, Acciones, Sucesores).
+
+funcionObjetivo(Estado, entregar(Objeto), _) :-
+	buscar(inicio => _, Estado, _ => ObjsInicio),
+	estaEn(ObjsInicio, Objeto).
+funcionObjetivo(Estado, reacomodar(Objeto), Base) :-
+	propiedadesObjetoHerencia(Objeto, Base, Props),
+	buscar(estante => _, Props, _ => Estante),
+	buscar(Estante => _, Estado, _ => ObjsEstante),
+	estaEn(ObjsEstante, Objeto).
 
 % Utilidades ------------------------------------------------------------------
 
