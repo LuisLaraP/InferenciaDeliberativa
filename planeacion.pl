@@ -77,6 +77,12 @@ funcionObjetivo(Estado, reacomodar(Objeto), Base) :-
 
 % Utilidades ------------------------------------------------------------------
 
+generarCamino(nodo(nil, nil, Inicio), _, [nodo(nil, nil, Inicio)]).
+generarCamino(nodo(Padre, Accion, Hijo), Blancos, Camino) :-
+	buscar(nodo(_, _, Padre), Blancos, Antecesor),
+	generarCamino(Antecesor, Blancos, Cs),
+	agregar(nodo(Padre, Accion, Hijo), Cs, Camino).
+
 expandirAgarrar([], []).
 expandirAgarrar([O | Os], [agarrar(O) | Rs]):-
 	expandirAgarrar(Os, Rs).
