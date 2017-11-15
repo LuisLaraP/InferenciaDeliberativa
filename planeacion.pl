@@ -16,13 +16,22 @@
 %	Arg. 1 - Base de entrada.
 %	Arg. 2 - Base de salida.
 planeacion(Base, NuevaBase) :-
+	propiedadesObjeto(decision, Base, Objetivos),
+	writeln('Los objetivos del plan son:'),
+	imprimirLista(Objetivos),
 	estadoInicial(Base, Inicio),
-	write("Estado inicial: "),
+	writeln('Estado inicial'),
 	writeln(Inicio),
+	busquedaPlan(Inicio, Objetivos, Base, Plan),
+	writeln('Plan encontrado:'),
+	imprimirLista(Plan),
 	filtrar(objetoSeLlama(diagnostico), Base, Objetos),
 	agregarPropiedadObjetos(Objetos, parar, Base, NuevaBase).
 
 % Algoritmo de búsqueda -------------------------------------------------------
+
+busquedaPlan(_, [], _, []).
+%busquedaPlan(Inicio, Objetivos, Base, Plan).
 
 expandirEstado(_, [], _, []).
 expandirEstado(Estado, [[A] | As], Base, Sucesores) :-
