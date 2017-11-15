@@ -22,7 +22,7 @@ planeacion(Base, NuevaBase) :-
 	estadoInicial(Base, Inicio),
 	writeln('Estado inicial'),
 	writeln(Inicio),
-	busquedaPlan(Inicio, Objetivos, Base, Plan),
+	busquedaPlan([], [nodo(nil, nil, Inicio)], Objetivos, Base, Plan),
 	writeln('Plan encontrado:'),
 	imprimirLista(Plan),
 	filtrar(objetoSeLlama(diagnostico), Base, Objetos),
@@ -30,8 +30,8 @@ planeacion(Base, NuevaBase) :-
 
 % Algoritmo de búsqueda -------------------------------------------------------
 
-busquedaPlan(_, [], _, []).
-%busquedaPlan(Inicio, Objetivos, Base, Plan).
+busquedaPlan(_, _, [], _, []).
+%busquedaPlan(Blancos, Grises, Objetivos, Base, Plan).
 
 expandirEstado(_, [], _, []).
 expandirEstado(Estado, [[A] | As], Base, Sucesores) :-
