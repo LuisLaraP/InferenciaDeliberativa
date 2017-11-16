@@ -166,9 +166,21 @@ igualdadElementos(N => X, N => X).
 nodoTieneHijo(Hijo, nodo(_, _, Nodo)) :-
 	igualdadEstados(Hijo, Nodo).
 
-recompensaAccion(Accion, ListaAcciones, _, 0) :-
+recompensaAccion(Accion, ListaAcciones, _, _, 0) :-
 	estaEn(ListaAcciones, Accion), !.
-recompensaAccion(Accion, _, Base, Recompensa) :-
+recompensaAccion(Accion, _, _, Base, Recompensa) :-
 	Accion =.. [Nombre | _],
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
 	buscar(recompensa => _, Props, _ => Recompensa).
+
+factorRecompensa(_, [], _, 0).
+factorRecompensa(Accion, [O | Os], Cuenta, Factor) :-
+	O =.. [_, Arg | _],
+	Accion =.. [_ | ArgAccion],
+	estaEn(ArgAccion, Arg), !,
+	Cuenta2 is Cuenta + 1,
+	factorRecompensa(Accion, Os, Cuenta2, F2),
+	Factor is F2 + 1 / Cuenta.
+factorRecompensa(Accion, [_ | Os], Cuenta, Factor) :-
+	Cuenta2 is Cuenta + 1,
+	factorRecompensa(Accion, Os, Cuenta2, Factor).
