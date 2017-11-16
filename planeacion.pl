@@ -30,7 +30,10 @@ planeacion(Base, NuevaBase) :-
 
 % Algoritmo de búsqueda -------------------------------------------------------
 
-busquedaPlan(_, _, [], _, []).
+busquedaPlan(_, _, [], Base, []) :-
+	recompensaAccion(mover(inicio, e1), [mover(e1, inicio)], Base, Recompensa),
+	write('Recompensa: '),
+	writeln(Recompensa).
 %busquedaPlan(Blancos, Grises, Objetivos, Base, Plan).
 
 expandirEstado(_, [], _, []).
@@ -162,3 +165,10 @@ igualdadElementos(N => X, N => X).
 
 nodoTieneHijo(Hijo, nodo(_, _, Nodo)) :-
 	igualdadEstados(Hijo, Nodo).
+
+recompensaAccion(Accion, ListaAcciones, _, 0) :-
+	estaEn(ListaAcciones, Accion), !.
+recompensaAccion(Accion, _, Base, Recompensa) :-
+	Accion =.. [Nombre | _],
+	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
+	buscar(recompensa => _, Props, _ => Recompensa).
