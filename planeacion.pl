@@ -86,12 +86,6 @@ funcionObjetivo(Estado, reacomodar(Objeto), Base) :-
 
 % Utilidades ------------------------------------------------------------------
 
-generarCamino(nodo(nil, nil, Inicio), _, [nodo(nil, nil, Inicio)]).
-generarCamino(nodo(Padre, Accion, Hijo), Blancos, Camino) :-
-	buscar(nodo(_, _, Padre), Blancos, Antecesor),
-	generarCamino(Antecesor, Blancos, Cs),
-	agregar(nodo(Padre, Accion, Hijo), Cs, Camino).
-
 expandirAgarrar([], []).
 expandirAgarrar([O | Os], [agarrar(O) | Rs]):-
 	expandirAgarrar(Os, Rs).
@@ -148,3 +142,20 @@ calcularSucesores(Estado, [mover(I, F) | As], [nodo(Estado, mover(I, F), S) | Rs
 	reemplazar(posicion => _, posicion => F, Estado, E3),
 	reemplazar(buscado => _, buscado => nil, E3, S),
 	calcularSucesores(Estado, As, Rs).
+
+generarCamino(nodo(nil, nil, Inicio), _, [nodo(nil, nil, Inicio)]).
+generarCamino(nodo(Padre, Accion, Hijo), Blancos, Camino) :-
+	buscar(nodo(_, _, Padre), Blancos, Antecesor),
+	generarCamino(Antecesor, Blancos, Cs),
+	agregar(nodo(Padre, Accion, Hijo), Cs, Camino).
+
+igualdadEstados([], _).
+igualdadEstados([E1 | E1s], E2) :-
+	filtrar(igualdadElementos(E1), E2, [E1]),
+	igualdadEstados(E1s, E2).
+
+igualdadElementos(N => E1, N => E2) :-
+	is_list(E1),
+	is_list(E2), !,
+	sonIguales(E1, E2).
+igualdadElementos(N => X, N => X).

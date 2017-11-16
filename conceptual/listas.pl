@@ -103,6 +103,14 @@ reemplazar(Original, Nuevo, [Original | R], [Nuevo | NuevaCola]) :-
 reemplazar(Original, Nuevo, [C | R], [C | NuevaCola]) :-
 	reemplazar(Original, Nuevo, R, NuevaCola), !.
 
+% Verdadero si ambas listas contienen exactamente los mismos elementos, sin
+% importar el orden.
+%	Arg. 1 - Lista 1.
+%	Arg. 2 - Lista 2.
+sonIguales(Lista1, Lista2) :-
+	eliminarTodos(Lista1, Lista2, []),
+	eliminarTodos(Lista2, Lista1, []).
+
 %concatena dos listas
 concatena([],L,L).
 concatena([H|L1],L2,[H|L3]):- concatena(L1,L2,L3).
