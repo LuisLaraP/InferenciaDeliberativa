@@ -145,7 +145,7 @@ calcularSucesores(Estado, [mover(I, F) | As], [nodo(Estado, mover(I, F), S) | Rs
 
 generarCamino(nodo(nil, nil, Inicio), _, [nodo(nil, nil, Inicio)]).
 generarCamino(nodo(Padre, Accion, Hijo), Blancos, Camino) :-
-	buscar(nodo(_, _, Padre), Blancos, Antecesor),
+	filtrar(nodoTieneHijo(Padre), Blancos, [Antecesor|_]),
 	generarCamino(Antecesor, Blancos, Cs),
 	agregar(nodo(Padre, Accion, Hijo), Cs, Camino).
 
@@ -159,3 +159,6 @@ igualdadElementos(N => E1, N => E2) :-
 	is_list(E2), !,
 	sonIguales(E1, E2).
 igualdadElementos(N => X, N => X).
+
+nodoTieneHijo(Hijo, nodo(_, _, Nodo)) :-
+	igualdadEstados(Hijo, Nodo).
