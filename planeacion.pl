@@ -30,23 +30,7 @@ planeacion(Base, NuevaBase) :-
 
 % Algoritmo de búsqueda -------------------------------------------------------
 
-busquedaPlan(_, _, [], Base, []) :-
-	/*recompensaCamino([
-		nodo(est1, mover(inicio, e1), est2),
-		nodo(est1, buscar(refresco1), est2),
-		nodo(est1, agarrar(refresco1), est2),
-		nodo(est1, mover(e1, inicio), est2),
-		nodo(est1, colocar(refresco1), est2)
-	], [entregar(refresco1), reacomodar(cereal1), reacomodar(sopa1), reacomodar(galletas1)], [], Base, Recompensa),*/
-	recompensaCamino([
-		nodo(est1, mover(inicio, e2), est2),
-		nodo(est1, buscar(galletas1), est2),
-		nodo(est1, agarrar(galletas1), est2),
-		nodo(est1, mover(e2, e3), est2),
-		nodo(est1, colocar(galletas1), est2)
-	], [entregar(refresco1), reacomodar(cereal1), reacomodar(sopa1), reacomodar(galletas1)], [], Base, Recompensa),
-	write('Recompensa: '),
-	writeln(Recompensa).
+busquedaPlan(_, _, [], Base, []).
 %busquedaPlan(Blancos, Grises, Objetivos, Base, Plan).
 
 expandirEstado(_, [], _, []).
@@ -179,7 +163,13 @@ igualdadElementos(N => X, N => X).
 nodoTieneHijo(Hijo, nodo(_, _, Nodo)) :-
 	igualdadEstados(Hijo, Nodo).
 
+recompensa(Nodo, Blancos, Objetivos, Base, Recompensa) :-
+	generarCamino(Nodo, Blancos, Camino),
+	recompensaCamino(Camino, Objetivos, [], Base, Recompensa).
+
 recompensaCamino([], _, _, _, 0).
+recompensaCamino([nodo(_, nil, _) | Cs], Objetivos, AccReal, Base, Recompensa) :-
+	recompensaCamino(Cs, Objetivos, AccReal, Base, Recompensa).
 recompensaCamino([nodo(_, Accion, _) | Cs], Objetivos, AccReal, Base, Recompensa) :-
 	recompensaAccion(Accion, AccReal, Objetivos, Base, RecAccion),
 	agregar(Accion, AccReal, Realizadas),
