@@ -80,6 +80,14 @@ filtrar(Condicion, [_ | R], Filtrada, Resultado) :-
 imprimirLista(Lista) :-
 	paraCada(Lista, writeln).
 
+% Invierte el orden de los elementos de la lista.
+%	Arg. 1 - Lista a invertir.
+%	Arg. 2 - Lista resultado.
+invertir([], []).
+invertir([X | Xs], R) :-
+	invertir(Xs, R2),
+	agregar(X, R2, R).
+
 % Llama a una función para cada miembro de la lista proporcionada. Este
 % predicado es verdadero si la función dada es verdadera para todos los
 % elementos de la lista. Si la función resulta falsa para alguno de los

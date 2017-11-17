@@ -30,7 +30,7 @@ planeacion(Base, NuevaBase) :-
 
 % Algoritmo de búsqueda -------------------------------------------------------
 
-busquedaPlan(_, _, [], Base, []).
+busquedaPlan(_, _, [], _, []).
 %busquedaPlan(Blancos, Grises, Objetivos, Base, Plan).
 
 expandirEstado(_, [], _, []).
@@ -162,6 +162,20 @@ igualdadElementos(N => X, N => X).
 
 nodoTieneHijo(Hijo, nodo(_, _, Nodo)) :-
 	igualdadEstados(Hijo, Nodo).
+
+costoNodo(nodo(_, Accion, _), Base, Costo) :-
+	Accion =.. [Nombre | Args],
+	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
+	buscar(costo => _, Props, _ => Costos),
+	agregar(Costo, Args, PatronCosto),
+	buscar(PatronCosto, Costos, _), !.
+costoNodo(nodo(_, Accion, _), Base, Costo) :-
+	Accion =.. [Nombre | Args],
+	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
+	buscar(costo => _, Props, _ => Costos),
+	invertir(Args, Args2),
+	agregar(Costo, Args2, PatronCosto),
+	buscar(PatronCosto, Costos, _).
 
 recompensa(Nodo, Blancos, Objetivos, Base, Recompensa) :-
 	generarCamino(Nodo, Blancos, Camino),
