@@ -31,8 +31,7 @@ planeacion(Base, NuevaBase) :-
 % Algoritmo de búsqueda -------------------------------------------------------
 
 busquedaPlan(_, _, [], Base, []) :-
-	%recompensaAccion(mover(inicio, e1), [mover(e1, inicio)], [], Base, Recompensa),
-	factorRecompensa(agarrar(sopa1), [reacomodar(refresco1), entregar(refresco1), reacomodar(cereal1)], Base, 1, Recompensa),
+	recompensaAccion(agarrar(refresco1), [mover(inicio, e1)], [entregar(refresco1), reacomodar(cereal1), reacomodar(sopa1), reacomodar(galletas1)], Base, Recompensa),
 	write('Recompensa: '),
 	writeln(Recompensa).
 %busquedaPlan(Blancos, Grises, Objetivos, Base, Plan).
@@ -169,10 +168,12 @@ nodoTieneHijo(Hijo, nodo(_, _, Nodo)) :-
 
 recompensaAccion(Accion, ListaAcciones, _, _, 0) :-
 	estaEn(ListaAcciones, Accion), !.
-recompensaAccion(Accion, _, _, Base, Recompensa) :-
+recompensaAccion(Accion, _, Objetivos, Base, Recompensa) :-
 	Accion =.. [Nombre | _],
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
-	buscar(recompensa => _, Props, _ => Recompensa).
+	buscar(recompensa => _, Props, _ => RecBase),
+	factorRecompensa(Accion, Objetivos, Base, 1, Factor),
+	Recompensa is RecBase * Factor.
 
 factorRecompensa(_, [], _, _, 0).
 factorRecompensa(mover(I, D), [entregar(Obj) | Os], Base, Cuenta, Factor) :-
