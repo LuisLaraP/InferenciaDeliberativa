@@ -31,7 +31,8 @@ planeacion(Base, NuevaBase) :-
 % Algoritmo de búsqueda -------------------------------------------------------
 
 busquedaPlan(_, _, [], Base, []) :-
-	recompensaAccion(mover(inicio, e1), [mover(e1, inicio)], Base, Recompensa),
+	%recompensaAccion(mover(inicio, e1), [mover(e1, inicio)], [], Base, Recompensa),
+	factorRecompensa(agarrar(sopa1), [reacomodar(refresco1), entregar(refresco1), reacomodar(cereal1)], Base, 1, Recompensa),
 	write('Recompensa: '),
 	writeln(Recompensa).
 %busquedaPlan(Blancos, Grises, Objetivos, Base, Plan).
@@ -173,14 +174,28 @@ recompensaAccion(Accion, _, _, Base, Recompensa) :-
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
 	buscar(recompensa => _, Props, _ => Recompensa).
 
-factorRecompensa(_, [], _, 0).
-factorRecompensa(Accion, [O | Os], Cuenta, Factor) :-
+factorRecompensa(_, [], _, _, 0).
+factorRecompensa(mover(I, D), [entregar(Obj) | Os], Base, Cuenta, Factor) :-
+	ubicacionObjeto(Obj, Base, Ubicacion),
+	(D == inicio; D == Ubicacion), !,
+	Cuenta2 is Cuenta + 1,
+	factorRecompensa(mover(I, D), Os, Base, Cuenta2, F2),
+	Factor is F2 + 1 / Cuenta.
+factorRecompensa(mover(I, D), [reacomodar(Obj) | Os], Base, Cuenta, Factor) :-
+	ubicacionObjeto(Obj, Base, Ubicacion),
+	propiedadesObjetoHerencia(Obj, Base, Props),
+	buscar(estante => _, Props, _ => Estante),
+	(D == Estante; D == Ubicacion), !,
+	Cuenta2 is Cuenta + 1,
+	factorRecompensa(mover(I, D), Os, Base, Cuenta2, F2),
+	Factor is F2 + 1 / Cuenta.
+factorRecompensa(Accion, [O | Os], Base, Cuenta, Factor) :-
 	O =.. [_, Arg | _],
 	Accion =.. [_ | ArgAccion],
 	estaEn(ArgAccion, Arg), !,
 	Cuenta2 is Cuenta + 1,
-	factorRecompensa(Accion, Os, Cuenta2, F2),
+	factorRecompensa(Accion, Os, Base, Cuenta2, F2),
 	Factor is F2 + 1 / Cuenta.
-factorRecompensa(Accion, [_ | Os], Cuenta, Factor) :-
+factorRecompensa(Accion, [_ | Os], Base, Cuenta, Factor) :-
 	Cuenta2 is Cuenta + 1,
-	factorRecompensa(Accion, Os, Cuenta2, Factor).
+	factorRecompensa(Accion, Os, Base, Cuenta2, Factor).
