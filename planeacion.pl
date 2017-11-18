@@ -31,13 +31,12 @@ planeacion(Base, NuevaBase) :-
 % Algoritmo de búsqueda -------------------------------------------------------
 
 busquedaPlan(_, _, [], _, []).
-busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
+busquedaPlan(Blancos, Grises, Objetivos, Base, _) :-
 	maximaRecompensa(Grises, Blancos, Objetivos, Base, Maximo, _),
 	eliminar(Maximo, Grises, Grises2),
-	generarCamino(Maximo, Blancos, Camino),
-	costoCamino(Camino, Blancos, Base, Costo),
+	agregarBlanco(Maximo, Blancos, Base, Blancos2),
 	writeln('Resultado:'),
-	writeln(Costo).
+	writeln(Blancos2).
 
 expandirNodo(_, [], _, []).
 expandirNodo(nodo(_, _, Estado), [[A] | As], Base, Sucesores) :-
@@ -54,6 +53,20 @@ maximaRecompensa([G | Gs], Blancos, Objetivos, Base, Maximo, Recompensa) :-
 	-> Maximo = G, Recompensa = Actual
 	; Maximo = SigMax, Recompensa = SigRec
 	).
+
+agregarBlanco(nodo(Padre, Accion, Hijo), Blancos, Base, NBlancos) :-
+	filtrar(nodoTieneHijo(Hijo), Blancos, [Anterior]),
+	generarCamino(nodo(Padre, Accion, Hijo), Blancos, CaminoActual),
+	costoCamino(CaminoActual, Blancos, Base, CostoActual),
+	generarCamino(Anterior, Blancos, CaminoAnterior),
+	costoCamino(CaminoAnterior, Blancos, Base, CostoAnterior),
+	(CostoActual < CostoAnterior
+	->	eliminar(Anterior, Blancos, Blancos2),
+		agregar(nodo(Padre, Accion, Hijo), Blancos2, NBlancos)
+	;	NBlancos = Blancos
+	), !.
+agregarBlanco(Nodo, Blancos, _, NBlancos) :-
+	agregar(Nodo, Blancos, NBlancos).
 
 % Definición ------------------------------------------------------------------
 
