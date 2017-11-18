@@ -19,13 +19,10 @@ planeacion(Base, NuevaBase) :-
 	propiedadesObjeto(decision, Base, Objetivos),
 	writeln('Los objetivos del plan son:'),
 	imprimirLista(Objetivos),
-	estadoInicial(Base, Inicio),
-	writeln('Estado inicial'),
+	nodoInicial(Base, Inicio),
+	writeln('Nodo inicial'),
 	writeln(Inicio),
-	extensionClase(acciones_robot, Base, Acciones),
-	expandirEstado(Inicio, Acciones, Base, Suc),
-	agregar(nodo(nil, nil, Inicio), Suc, Grises),
-	busquedaPlan([], Grises, Objetivos, Base, Plan),
+	busquedaPlan([], [Inicio], Objetivos, Base, Plan),
 	writeln('Plan encontrado:'),
 	imprimirLista(Plan),
 	filtrar(objetoSeLlama(diagnostico), Base, Objetos),
@@ -39,8 +36,8 @@ busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
 	writeln('Resultado:'),
 	writeln(Maximo).
 
-expandirEstado(_, [], _, []).
-expandirEstado(Estado, [[A] | As], Base, Sucesores) :-
+expandirNodo(_, [], _, []).
+expandirNodo(nodo(_, _, Estado), [[A] | As], Base, Sucesores) :-
 	funcionSucesor(A, Estado, Base, SucA),
 	expandirEstado(Estado, As, Base, SucAs),
 	concatena(SucA, SucAs, Sucesores).
@@ -57,7 +54,7 @@ maximaRecompensa([G | Gs], Blancos, Objetivos, Base, Maximo, Recompensa) :-
 
 % Definición ------------------------------------------------------------------
 
-estadoInicial(Base, Inicio) :-
+nodoInicial(Base, nodo(nil, nil, Inicio)) :-
 	propiedadesObjeto(robot, Base, Robot),
 	propiedadesObjeto(creencia, Base, Creencia),
 	concatena(Robot, Creencia, E1),
