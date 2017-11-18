@@ -35,13 +35,18 @@ busquedaPlan(Blancos, Grises, Objetivos, Base, _) :-
 	maximaRecompensa(Grises, Blancos, Objetivos, Base, Maximo, _),
 	eliminar(Maximo, Grises, Grises2),
 	agregarBlanco(Maximo, Blancos, Base, Blancos2),
-	writeln('Resultado:'),
-	writeln(Blancos2).
+	extensionClase(acciones_robot, Base, Acciones),
+	expandirNodo(Maximo, Acciones, Base, Sucesores),
+	concatena(Grises2, Sucesores, Grises3),
+	writeln('Blancos:'),
+	writeln(Blancos2),
+	writeln('Grises:'),
+	writeln(Grises3).
 
 expandirNodo(_, [], _, []).
 expandirNodo(nodo(_, _, Estado), [[A] | As], Base, Sucesores) :-
 	funcionSucesor(A, Estado, Base, SucA),
-	expandirEstado(Estado, As, Base, SucAs),
+	expandirNodo(nodo(_, _, Estado), As, Base, SucAs),
 	concatena(SucA, SucAs, Sucesores).
 
 maximaRecompensa([G], Blancos, Objetivos, Base, G, Recompensa) :-
