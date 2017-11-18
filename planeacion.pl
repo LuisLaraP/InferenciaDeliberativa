@@ -52,9 +52,7 @@ busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
 		extraerAcciones(CaminoActual, PlanActual)
 	),
 	busquedaPlan(NBlancos, NGrises, NObjetivos, Base, SigPlan),
-	concatena(PlanActual, SigPlan, Plan),
-	writeln('Resultado:'),
-	writeln(Cumplidos).
+	concatena(PlanActual, SigPlan, Plan).
 
 expandirNodo(_, [], _, []).
 expandirNodo(nodo(_, _, Estado), [[A] | As], Base, Sucesores) :-
