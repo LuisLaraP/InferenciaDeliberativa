@@ -38,10 +38,9 @@ busquedaPlan(Blancos, Grises, Objetivos, Base, _) :-
 	extensionClase(acciones_robot, Base, Acciones),
 	expandirNodo(Maximo, Acciones, Base, Sucesores),
 	concatena(Grises2, Sucesores, Grises3),
-	writeln('Blancos:'),
-	writeln(Blancos2),
-	writeln('Grises:'),
-	writeln(Grises3).
+	objetivosCumplidos(Maximo, Objetivos, Base, Cumplidos),
+	writeln('Resultado:'),
+	writeln(Cumplidos).
 
 expandirNodo(_, [], _, []).
 expandirNodo(nodo(_, _, Estado), [[A] | As], Base, Sucesores) :-
@@ -72,6 +71,14 @@ agregarBlanco(nodo(Padre, Accion, Hijo), Blancos, Base, NBlancos) :-
 	), !.
 agregarBlanco(Nodo, Blancos, _, NBlancos) :-
 	agregar(Nodo, Blancos, NBlancos).
+
+objetivosCumplidos(_, [], _, []).
+objetivosCumplidos(nodo(P, A, H), [O | Os], Base, Cumplidos) :-
+	objetivosCumplidos(nodo(P, A, H), Os, Base, Sig),
+	(funcionObjetivo(H, O, Base)
+	->	agregar(O, Sig, Cumplidos)
+	;	Cumplidos = Sig
+	).
 
 % Definición ------------------------------------------------------------------
 
