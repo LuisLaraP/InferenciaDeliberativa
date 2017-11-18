@@ -32,9 +32,12 @@ planeacion(Base, NuevaBase) :-
 
 busquedaPlan(_, _, [], _, []).
 busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
-	maximaRecompensa(Grises, Grises, Objetivos, Base, Maximo, Recompensa),
+	maximaRecompensa(Grises, Blancos, Objetivos, Base, Maximo, _),
+	eliminar(Maximo, Grises, Grises2),
+	generarCamino(Maximo, Blancos, Camino),
+	costoCamino(Camino, Blancos, Base, Costo),
 	writeln('Resultado:'),
-	writeln(Maximo).
+	writeln(Costo).
 
 expandirNodo(_, [], _, []).
 expandirNodo(nodo(_, _, Estado), [[A] | As], Base, Sucesores) :-
@@ -176,6 +179,13 @@ igualdadElementos(N => X, N => X).
 nodoTieneHijo(Hijo, nodo(_, _, Nodo)) :-
 	igualdadEstados(Hijo, Nodo).
 
+costoCamino([], _, _, 0).
+costoCamino([C | Cs], Blancos, Base, Costo) :-
+	costoCamino(Cs, Blancos, Base, Costo2),
+	costoNodo(C, Base, Costo1),
+	Costo is Costo1 + Costo2.
+
+costoNodo(nodo(_, nil, _), _, 0).
 costoNodo(nodo(_, Accion, _), Base, Costo) :-
 	Accion =.. [Nombre | Args],
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
