@@ -203,6 +203,8 @@ generarCamino(nodo(Padre, Accion, Hijo), Blancos, Camino) :-
 	agregar(nodo(Padre, Accion, Hijo), Cs, Camino).
 
 extraerAcciones([], []).
+extraerAcciones([nodo(_, nil, _) | Cs], [As]) :-
+	extraerAcciones(Cs, As).
 extraerAcciones([nodo(_, A, _) | Cs], [A | As]) :-
 	extraerAcciones(Cs, As).
 
