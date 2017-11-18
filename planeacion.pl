@@ -22,7 +22,10 @@ planeacion(Base, NuevaBase) :-
 	estadoInicial(Base, Inicio),
 	writeln('Estado inicial'),
 	writeln(Inicio),
-	busquedaPlan([], [nodo(nil, nil, Inicio)], Objetivos, Base, Plan),
+	extensionClase(acciones_robot, Base, Acciones),
+	expandirEstado(Inicio, Acciones, Base, Suc),
+	agregar(nodo(nil, nil, Inicio), Suc, Grises),
+	busquedaPlan([], Grises, Objetivos, Base, Plan),
 	writeln('Plan encontrado:'),
 	imprimirLista(Plan),
 	filtrar(objetoSeLlama(diagnostico), Base, Objetos),
@@ -31,13 +34,26 @@ planeacion(Base, NuevaBase) :-
 % Algoritmo de búsqueda -------------------------------------------------------
 
 busquedaPlan(_, _, [], _, []).
-%busquedaPlan(Blancos, Grises, Objetivos, Base, Plan).
+busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
+	maximaRecompensa(Grises, Grises, Objetivos, Base, Maximo, Recompensa),
+	writeln('Resultado:'),
+	writeln(Maximo).
 
 expandirEstado(_, [], _, []).
 expandirEstado(Estado, [[A] | As], Base, Sucesores) :-
 	funcionSucesor(A, Estado, Base, SucA),
 	expandirEstado(Estado, As, Base, SucAs),
 	concatena(SucA, SucAs, Sucesores).
+
+maximaRecompensa([G], Blancos, Objetivos, Base, G, Recompensa) :-
+	recompensa(G, Blancos, Objetivos, Base, Recompensa).
+maximaRecompensa([G | Gs], Blancos, Objetivos, Base, Maximo, Recompensa) :-
+	maximaRecompensa(Gs, Blancos, Objetivos, Base, SigMax, SigRec),
+	recompensa(G, Blancos, Objetivos, Base, Actual),
+	(Actual > SigRec
+	-> Maximo = G, Recompensa = Actual
+	; Maximo = SigMax, Recompensa = SigRec
+	).
 
 % Definición ------------------------------------------------------------------
 
