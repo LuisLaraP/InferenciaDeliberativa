@@ -31,7 +31,7 @@ planeacion(Base, NuevaBase) :-
 % Algoritmo de búsqueda -------------------------------------------------------
 
 busquedaPlan(_, _, [], _, []).
-busquedaPlan(Blancos, Grises, Objetivos, Base, _) :-
+busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
 	maximaRecompensa(Grises, Blancos, Objetivos, Base, Maximo, _),
 	eliminar(Maximo, Grises, Grises2),
 	agregarBlanco(Maximo, Blancos, Base, Blancos2),
@@ -39,6 +39,20 @@ busquedaPlan(Blancos, Grises, Objetivos, Base, _) :-
 	expandirNodo(Maximo, Acciones, Base, Sucesores),
 	concatena(Grises2, Sucesores, Grises3),
 	objetivosCumplidos(Maximo, Objetivos, Base, Cumplidos),
+	(Cumplidos == []
+	->	NBlancos = Blancos2,
+		NGrises = Grises3,
+		NObjetivos = Objetivos,
+		PlanActual = []
+	;	eliminarTodos(Cumplidos, Objetivos, NObjetivos),
+		NBlancos = [],
+		Maximo = nodo(_, _, S),
+		NGrises = [nodo(nil, nil, S)],
+		generarCamino(Maximo, Blancos, CaminoActual),
+		extraerAcciones(CaminoActual, PlanActual)
+	),
+	busquedaPlan(NBlancos, NGrises, NObjetivos, Base, SigPlan),
+	concatena(PlanActual, SigPlan, Plan),
 	writeln('Resultado:'),
 	writeln(Cumplidos).
 
@@ -189,6 +203,10 @@ generarCamino(nodo(Padre, Accion, Hijo), Blancos, Camino) :-
 	filtrar(nodoTieneHijo(Padre), Blancos, [Antecesor|_]),
 	generarCamino(Antecesor, Blancos, Cs),
 	agregar(nodo(Padre, Accion, Hijo), Cs, Camino).
+
+extraerAcciones([], []).
+extraerAcciones([nodo(_, A, _) | Cs], [A | As]) :-
+	extraerAcciones(Cs, As).
 
 igualdadEstados([], _).
 igualdadEstados([E1 | E1s], E2) :-
