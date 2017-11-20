@@ -33,12 +33,8 @@ planeacion(Base, NuevaBase) :-
 busquedaPlan(_, _, [], _, []).
 busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
 	maximaRecompensa(Grises, Objetivos, Base, Maximo, _),
-	writeln('Resultado:'),
-	writeln(Maximo).
-	/*
-	maximaRecompensa(Grises, Blancos, Objetivos, Base, Maximo, _),
 	eliminar(Maximo, Grises, Grises2),
-	agregarBlanco(Maximo, Blancos, Base, Blancos2),
+	agregar(Maximo, Blancos, Blancos2),
 	extensionClase(acciones_robot, Base, Acciones),
 	expandirNodo(Maximo, Acciones, Base, Sucesores),
 	concatena(Grises2, Sucesores, Grises3),
@@ -50,13 +46,11 @@ busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
 		PlanActual = []
 	;	eliminarTodos(Cumplidos, Objetivos, NObjetivos),
 		NBlancos = [],
-		Maximo = nodo(_, _, S),
-		NGrises = [nodo(nil, nil, S)],
-		generarCamino(Maximo, Blancos, CaminoActual),
-		extraerAcciones(CaminoActual, PlanActual)
+		Maximo = nodo(_, PlanActual, S),
+		NGrises = [nodo(S, [], S)]
 	),
 	busquedaPlan(NBlancos, NGrises, NObjetivos, Base, SigPlan),
-	concatena(PlanActual, SigPlan, Plan).*/
+	concatena(PlanActual, SigPlan, Plan).
 
 expandirNodo(_, [], _, []).
 expandirNodo(Nodo, [[A] | As], Base, Sucesores) :-
