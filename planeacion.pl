@@ -68,20 +68,6 @@ maximaRecompensa([G | Gs], Objetivos, Base, Maximo, Recompensa) :-
 	; Maximo = SigMax, Recompensa = SigRec
 	).
 
-agregarBlanco(nodo(Padre, Accion, Hijo), Blancos, Base, NBlancos) :-
-	filtrar(nodoTieneHijo(Hijo), Blancos, [Anterior]),
-	generarCamino(nodo(Padre, Accion, Hijo), Blancos, CaminoActual),
-	costoCamino(CaminoActual, Blancos, Base, CostoActual),
-	generarCamino(Anterior, Blancos, CaminoAnterior),
-	costoCamino(CaminoAnterior, Blancos, Base, CostoAnterior),
-	(CostoActual < CostoAnterior
-	->	eliminar(Anterior, Blancos, Blancos2),
-		agregar(nodo(Padre, Accion, Hijo), Blancos2, NBlancos)
-	;	NBlancos = Blancos
-	), !.
-agregarBlanco(Nodo, Blancos, _, NBlancos) :-
-	agregar(Nodo, Blancos, NBlancos).
-
 objetivosCumplidos(_, [], _, []).
 objetivosCumplidos(nodo(P, A, H), [O | Os], Base, Cumplidos) :-
 	objetivosCumplidos(nodo(P, A, H), Os, Base, Sig),
@@ -199,32 +185,6 @@ calcularSucesores(nodo(I, A, Estado), [mover(Inicio, Fin) | As], [nodo(I, A2, S)
 	agregar(mover(Inicio, Fin), A, A2),
 	calcularSucesores(nodo(I, A, Estado), As, Rs).
 
-generarCamino(nodo(nil, nil, Inicio), _, [nodo(nil, nil, Inicio)]).
-generarCamino(nodo(Padre, Accion, Hijo), Blancos, Camino) :-
-	filtrar(nodoTieneHijo(Padre), Blancos, [Antecesor|_]),
-	generarCamino(Antecesor, Blancos, Cs),
-	agregar(nodo(Padre, Accion, Hijo), Cs, Camino).
-
-extraerAcciones([], []).
-extraerAcciones([nodo(_, nil, _) | Cs], As) :-
-	extraerAcciones(Cs, As).
-extraerAcciones([nodo(_, A, _) | Cs], [A | As]) :-
-	extraerAcciones(Cs, As).
-
-igualdadEstados([], _).
-igualdadEstados([E1 | E1s], E2) :-
-	filtrar(igualdadElementos(E1), E2, [E1]),
-	igualdadEstados(E1s, E2).
-
-igualdadElementos(N => E1, N => E2) :-
-	is_list(E1),
-	is_list(E2), !,
-	sonIguales(E1, E2).
-igualdadElementos(N => X, N => X).
-
-nodoTieneHijo(Hijo, nodo(_, _, Nodo)) :-
-	igualdadEstados(Hijo, Nodo).
-
 costoCamino([], _, 0).
 costoCamino([C | Cs], Base, Costo) :-
 	costoCamino(Cs, Base, Costo2),
@@ -259,15 +219,6 @@ recompensa(nodo(_, Acciones, _), Objetivos, Base, Recompensa) :-
 recompensa(nodo(_, Acciones, _), Objetivos, Base, Recompensa) :-
 	invertir(Acciones, [Ultima | AccionesInv]),
 	recompensaAccion(Ultima, AccionesInv, Objetivos, Base, Recompensa).
-
-recompensaCamino([], _, _, _, 0).
-recompensaCamino([nodo(_, nil, _) | Cs], Objetivos, AccReal, Base, Recompensa) :-
-	recompensaCamino(Cs, Objetivos, AccReal, Base, Recompensa).
-recompensaCamino([nodo(_, Accion, _) | Cs], Objetivos, AccReal, Base, Recompensa) :-
-	recompensaAccion(Accion, AccReal, Objetivos, Base, RecAccion),
-	agregar(Accion, AccReal, Realizadas),
-	recompensaCamino(Cs, Objetivos, Realizadas, Base, RecResto),
-	Recompensa is RecAccion + RecResto.
 
 recompensaAccion(Accion, ListaAcciones, _, _, 0) :-
 	estaEn(ListaAcciones, Accion), !.
