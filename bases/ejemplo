@@ -35,10 +35,10 @@
 
 	objeto([mover], acciones_empleado, [], []),
 	objeto([colocar], acciones_empleado, [], []),
-	objeto([colocar], acciones_robot, [
+	objeto([mover], acciones_robot, [
 		costo => [[inicio, e1, 5], [inicio, e2, 5], [inicio, e3, 5],
 			[e1, e2, 15], [e2, e3, 15], [e3, e1, 15]],
-		exito => [[_, 0.9]],
+		exito => [[_, _, 0.9]],
 		recompensa => 10
 	], []),
 	objeto([buscar], acciones_robot, [
@@ -58,7 +58,7 @@
 	], []),
 	objeto([entregar], decisiones_robot, [], []),
 	objeto([reacomodar], decisiones_robot, [], []),
-	objeto([creencia], estados, [e1 => [cerveza1, refresco1], e2 => [sopa1, cereal1], e3 => [galletas1]], []),
+	objeto([creencia], estados, [inicio => [], e1 => [cerveza1, refresco1], e2 => [sopa1, cereal1], e3 => [galletas1]], []),
 	objeto([diagnostico], procesos, [], []),
 	objeto([decision], procesos, [], []),
 	objeto([agenda], procesos, [], []),
@@ -72,6 +72,7 @@
 	objeto([e3], ubicaciones, [], []),
 
 	objeto([escenario], top, [
+		inicio => [],
 		e1 => [refresco1, cerveza1, sopa1],
 		e2 => [galletas1],
 		e3 => [cereal1]
@@ -80,5 +81,6 @@
 		brazo_derecho => nil,
 		brazo_izquierdo => nil,
 		posicion => inicio
-	], [])
+	], []),
+	objeto([orden], top, [refresco1], [])
 ].
