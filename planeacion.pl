@@ -31,7 +31,8 @@ planeacion(Base, NuevaBase) :-
 % Algoritmo de búsqueda -------------------------------------------------------
 
 busquedaPlan(_, _, [], _, []).
-busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
+busquedaPlan(Blancos, Grises, Objetivos, Base, Plan).
+	/*
 	maximaRecompensa(Grises, Blancos, Objetivos, Base, Maximo, _),
 	eliminar(Maximo, Grises, Grises2),
 	agregarBlanco(Maximo, Blancos, Base, Blancos2),
@@ -52,7 +53,7 @@ busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
 		extraerAcciones(CaminoActual, PlanActual)
 	),
 	busquedaPlan(NBlancos, NGrises, NObjetivos, Base, SigPlan),
-	concatena(PlanActual, SigPlan, Plan).
+	concatena(PlanActual, SigPlan, Plan).*/
 
 expandirNodo(_, [], _, []).
 expandirNodo(nodo(_, _, Estado), [[A] | As], Base, Sucesores) :-
@@ -94,7 +95,7 @@ objetivosCumplidos(nodo(P, A, H), [O | Os], Base, Cumplidos) :-
 
 % Definición ------------------------------------------------------------------
 
-nodoInicial(Base, nodo(nil, nil, Inicio)) :-
+nodoInicial(Base, nodo(Inicio, [], Inicio)) :-
 	propiedadesObjeto(robot, Base, Robot),
 	propiedadesObjeto(creencia, Base, Creencia),
 	concatena(Robot, Creencia, E1),
