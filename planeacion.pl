@@ -31,7 +31,11 @@ planeacion(Base, NuevaBase) :-
 % Algoritmo de búsqueda -------------------------------------------------------
 
 busquedaPlan(_, _, [], _, []).
-busquedaPlan(Blancos, Grises, Objetivos, Base, Plan).
+busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
+	Grises = [Primero | _],
+	expandirNodo(Primero, [[agarrar], [buscar], [colocar], [mover]], Base, Sucesores),
+	writeln('Resultado:'),
+	imprimirLista(Sucesores).
 	/*
 	maximaRecompensa(Grises, Blancos, Objetivos, Base, Maximo, _),
 	eliminar(Maximo, Grises, Grises2),
@@ -56,9 +60,9 @@ busquedaPlan(Blancos, Grises, Objetivos, Base, Plan).
 	concatena(PlanActual, SigPlan, Plan).*/
 
 expandirNodo(_, [], _, []).
-expandirNodo(nodo(_, _, Estado), [[A] | As], Base, Sucesores) :-
-	funcionSucesor(A, Estado, Base, SucA),
-	expandirNodo(nodo(_, _, Estado), As, Base, SucAs),
+expandirNodo(Nodo, [[A] | As], Base, Sucesores) :-
+	funcionSucesor(A, Nodo, Base, SucA),
+	expandirNodo(Nodo, As, Base, SucAs),
 	concatena(SucA, SucAs, Sucesores).
 
 maximaRecompensa([G], Blancos, Objetivos, Base, G, Recompensa) :-
@@ -101,33 +105,33 @@ nodoInicial(Base, nodo(Inicio, [], Inicio)) :-
 	concatena(Robot, Creencia, E1),
 	agregar(buscado => nil, E1, Inicio).
 
-funcionSucesor(agarrar, Estado, _, Sucesores) :-
+funcionSucesor(agarrar, nodo(I, A, Estado), _, Sucesores) :-
 	buscar(buscado => _, Estado, _ => Objeto),
 	Objeto \== nil, !,
 	expandirAgarrar([Objeto], Acciones),
-	calcularSucesores(Estado, Acciones, Sucesores).
+	calcularSucesores(nodo(I, A, Estado), Acciones, Sucesores).
 funcionSucesor(agarrar, _, _, []).
 
-funcionSucesor(buscar, Estado, _, Sucesores) :-
+funcionSucesor(buscar, nodo(I, A, Estado), _, Sucesores) :-
 	buscar(buscado => _, Estado, _ => nil), !,
 	buscar(posicion => _, Estado, _ => Posicion),
 	buscar(Posicion => _, Estado, _ => Objetos),
 	expandirBuscar(Objetos, Acciones),
-	calcularSucesores(Estado, Acciones, Sucesores).
+	calcularSucesores(nodo(I, A, Estado), Acciones, Sucesores).
 funcionSucesor(buscar, _, _, []).
 
-funcionSucesor(colocar, Estado, _, Sucesores) :-
+funcionSucesor(colocar, nodo(I, A, Estado), _, Sucesores) :-
 	buscar(brazo_derecho => _, Estado, _ => Der),
 	buscar(brazo_izquierdo => _, Estado, _ => Izq),
 	expandirColocar([Der, Izq], Acciones),
-	calcularSucesores(Estado, Acciones, Sucesores).
+	calcularSucesores(nodo(I, A, Estado), Acciones, Sucesores).
 
-funcionSucesor(mover, Estado, Base, Sucesores) :-
+funcionSucesor(mover, nodo(I, A, Estado), Base, Sucesores) :-
 	buscar(posicion => _, Estado, _ => Posicion),
 	extensionClase(ubicaciones, Base, U),
 	filtrar(\==([Posicion]), U, Ubicaciones),
 	expandirMover(Posicion, Ubicaciones, Acciones),
-	calcularSucesores(Estado, Acciones, Sucesores).
+	calcularSucesores(nodo(I, A, Estado), Acciones, Sucesores).
 
 funcionObjetivo(Estado, entregar(Objeto), _) :-
 	buscar(inicio => _, Estado, _ => ObjsInicio),
@@ -159,7 +163,7 @@ expandirMover(Posicion, [[U] | Us], [mover(Posicion, U) | Rs]) :-
 	expandirMover(Posicion, Us, Rs).
 
 calcularSucesores(_, [], []).
-calcularSucesores(Estado, [agarrar(O) | As], [nodo(Estado, agarrar(O), S) | Rs]) :-
+calcularSucesores(nodo(I, A, Estado), [agarrar(O) | As], [nodo(I, A2, S) | Rs]) :-
 	buscar(brazo_derecho => _, Estado, _ => nil), !,
 	buscar(posicion => _, Estado, _ => Posicion),
 	buscar(Posicion => _, Estado, _ => Objetos),
@@ -167,8 +171,9 @@ calcularSucesores(Estado, [agarrar(O) | As], [nodo(Estado, agarrar(O), S) | Rs])
 	reemplazar(Posicion => Objetos, Posicion => NObjetos, Estado, E2),
 	reemplazar(brazo_derecho => nil, brazo_derecho => O, E2, E3),
 	reemplazar(buscado => _, buscado => nil, E3, S),
-	calcularSucesores(Estado, As, Rs).
-calcularSucesores(Estado, [agarrar(O) | As], [nodo(Estado, agarrar(O), S) | Rs]) :-
+	agregar(agarrar(O), A, A2),
+	calcularSucesores(nodo(I, A, Estado), As, Rs).
+calcularSucesores(nodo(I, A, Estado), [agarrar(O) | As], [nodo(I, A2, S) | Rs]) :-
 	buscar(brazo_izquierdo => _, Estado, _ => nil), !,
 	buscar(posicion => _, Estado, _ => Posicion),
 	buscar(Posicion => _, Estado, _ => Objetos),
@@ -176,13 +181,15 @@ calcularSucesores(Estado, [agarrar(O) | As], [nodo(Estado, agarrar(O), S) | Rs])
 	reemplazar(Posicion => Objetos, Posicion => NObjetos, Estado, E2),
 	reemplazar(brazo_izquierdo => nil, brazo_izquierdo => O, E2, E3),
 	reemplazar(buscado => _, buscado => nil, E3, S),
-	calcularSucesores(Estado, As, Rs).
-calcularSucesores(Estado, [agarrar(_) | As], Rs) :-
-	calcularSucesores(Estado, As, Rs).
-calcularSucesores(Estado, [buscar(O) | As], [nodo(Estado, buscar(O), S) | Rs]) :-
+	agregar(agarrar(O), A, A2),
+	calcularSucesores(nodo(I, A, Estado), As, Rs).
+calcularSucesores(nodo(I, A, Estado), [agarrar(_) | As], Rs) :-
+	calcularSucesores(nodo(I, A, Estado), As, Rs).
+calcularSucesores(nodo(I, A, Estado), [buscar(O) | As], [nodo(I, A2, S) | Rs]) :-
 	reemplazar(buscado => _, buscado => O, Estado, S),
-	calcularSucesores(Estado, As, Rs).
-calcularSucesores(Estado, [colocar(O) | As], [nodo(Estado, colocar(O), S) | Rs]) :-
+	agregar(buscar(O), A, A2),
+	calcularSucesores(nodo(I, A, Estado), As, Rs).
+calcularSucesores(nodo(I, A, Estado), [colocar(O) | As], [nodo(I, A2, S) | Rs]) :-
 	buscar(_ => O, Estado, Brazo => _),
 	(Brazo == brazo_derecho; Brazo == brazo_izquierdo),
 	reemplazar(Brazo => O, Brazo => nil, Estado, E2),
@@ -191,11 +198,13 @@ calcularSucesores(Estado, [colocar(O) | As], [nodo(Estado, colocar(O), S) | Rs])
 	agregar(O, Objetos, NObjetos),
 	reemplazar(Posicion => Objetos, Posicion => NObjetos, E2, E3),
 	reemplazar(buscado => _, buscado => nil, E3, S),
-	calcularSucesores(Estado, As, Rs).
-calcularSucesores(Estado, [mover(I, F) | As], [nodo(Estado, mover(I, F), S) | Rs]) :-
-	reemplazar(posicion => _, posicion => F, Estado, E3),
+	agregar(colocar(O), A, A2),
+	calcularSucesores(nodo(I, A, Estado), As, Rs).
+calcularSucesores(nodo(I, A, Estado), [mover(Inicio, Fin) | As], [nodo(I, A2, S) | Rs]) :-
+	reemplazar(posicion => _, posicion => Fin, Estado, E3),
 	reemplazar(buscado => _, buscado => nil, E3, S),
-	calcularSucesores(Estado, As, Rs).
+	agregar(mover(Inicio, Fin), A, A2),
+	calcularSucesores(nodo(I, A, Estado), As, Rs).
 
 generarCamino(nodo(nil, nil, Inicio), _, [nodo(nil, nil, Inicio)]).
 generarCamino(nodo(Padre, Accion, Hijo), Blancos, Camino) :-
