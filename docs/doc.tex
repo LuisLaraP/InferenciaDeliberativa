@@ -91,6 +91,16 @@ También existe un objeto \texttt{robot}, que mantiene los objetos que éste tie
 
 \section{Módulos}
 
+\subsection{Simulador}
+
+La primera sección del proyecto que se ejecuta cuando éste inicia es el simulador. Éste se encarga de coordinar la ejecución de los tres módulos cuando sea necesario y de ejecutar el plan encontrado.
+
+Al inicio del programa, el simulador ejecuta los tres módulos para generar un plan y cumplir las órdenes del cliente. En esta primera iteración, el robot confía plenamente en el reporte inicial del empleado de la tienda, y solamente busca entregar los productos que el cliente le pidió.
+
+Una vez generado el plan, el simulador ejecuta las acciones secuencialmente. para determinar si una acción tuvo o no éxito, se extrae la probabilidad de éxito de la misma, almacenada en la base de conocimiento y mediante un generador de números aleatorios, se aplica dicha probabilidad. Adicionalmente, la acción buscar puede fallar si se recibe una observación que no concuerda con la creencia que tiene el robot del mundo en ese momento.
+
+Si alguna de las acciones falla, el simulador vuelve a ejecutar los tres módulos del proyecto, con el fin de generar un nuevo plan para superar los obstáculos que pueda haber encontrado. Las acciones anteriores se repiten hasta que el robot cumple con todas sus encomiendas. En este momento, el programa termina.
+
 \subsection{Módulo de diagnóstico}
 
 Para hacer un dignostico se necesita un conjunto de observaciones y una
