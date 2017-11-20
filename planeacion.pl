@@ -33,9 +33,10 @@ planeacion(Base, NuevaBase) :-
 busquedaPlan(_, _, [], _, []).
 busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
 	Grises = [Primero | _],
-	expandirNodo(Primero, [[agarrar], [buscar], [colocar], [mover]], Base, Sucesores),
+	Primero = nodo(_, Camino, _),
+	costoCamino(Camino, Base, Costo),
 	writeln('Resultado:'),
-	imprimirLista(Sucesores).
+	writeln(Costo).
 	/*
 	maximaRecompensa(Grises, Blancos, Objetivos, Base, Maximo, _),
 	eliminar(Maximo, Grises, Grises2),
@@ -232,20 +233,20 @@ igualdadElementos(N => X, N => X).
 nodoTieneHijo(Hijo, nodo(_, _, Nodo)) :-
 	igualdadEstados(Hijo, Nodo).
 
-costoCamino([], _, _, 0).
-costoCamino([C | Cs], Blancos, Base, Costo) :-
-	costoCamino(Cs, Blancos, Base, Costo2),
-	costoNodo(C, Base, Costo1),
+costoCamino([], _, 0).
+costoCamino([C | Cs], Base, Costo) :-
+	costoCamino(Cs, Base, Costo2),
+	costoAccion(C, Base, Costo1),
 	Costo is Costo1 + Costo2.
 
-costoNodo(nodo(_, nil, _), _, 0).
-costoNodo(nodo(_, Accion, _), Base, Costo) :-
+costoAccion(nil, _, 0).
+costoAccion(Accion, Base, Costo) :-
 	Accion =.. [Nombre | Args],
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
 	buscar(costo => _, Props, _ => Costos),
 	agregar(Costo, Args, PatronCosto),
 	buscar(PatronCosto, Costos, _), !.
-costoNodo(nodo(_, Accion, _), Base, Costo) :-
+costoAccion(Accion, Base, Costo) :-
 	Accion =.. [Nombre | Args],
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
 	buscar(costo => _, Props, _ => Costos),
