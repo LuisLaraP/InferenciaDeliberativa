@@ -248,6 +248,15 @@ costoAccion(Accion, Base, Costo) :-
 
 recompensa(nodo(_, [], _), _, _, 0).
 recompensa(nodo(_, Acciones, _), Objetivos, Base, Recompensa) :-
+	invertir(Acciones, [Ultima, Penultima | AccionesInv]), !,
+	recompensaAccion(Ultima, AccionesInv, Objetivos, Base, RecBase),
+	Ultima =.. [NomUlt | _],
+	Penultima =.. [NomPen | _],
+	(NomUlt == NomPen
+	->	Recompensa is RecBase / 2
+	;	Recompensa is RecBase
+	).
+recompensa(nodo(_, Acciones, _), Objetivos, Base, Recompensa) :-
 	invertir(Acciones, [Ultima | AccionesInv]),
 	recompensaAccion(Ultima, AccionesInv, Objetivos, Base, Recompensa).
 
