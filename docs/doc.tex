@@ -32,7 +32,7 @@
 
 \setlength{\parindent}{0pt}
 
-\title{Inteligencia Artificial 2018-1 \\ Proyecto2: Búsqueda\\
+\title{Inteligencia Artificial 2018-1 \\ Proyecto 2: Búsqueda\\
 \vspace{2mm}
 \small{IIMAS-PCIC}}
 \author{Luis Alejandro Lara Patiño\\Roberto Monroy Argumedo\\
@@ -48,7 +48,46 @@ Alejandro Ehécatl Morales Huitrón}
 
 \section{Funcionamiento del proyecto}
 
-Este proyecto contiene ..
+\subsection{Carga de información}
+Toda la información necesaria para el funcionamiento del programa debe cargarse en la base de conocimiento previamente a la ejecución. Las bases se guardan en el directorio \texttt{bases}, y se pasan como argumento al programa escribiendo el nombre de archivo, sin la extensión.
+
+\subsection{Ejecución}
+
+El punto de entrada al proyecto es el archivo main.pl. Este archivo está acondicionado para ejecutarse tanto desde el listener de Prolog como desde una terminal en sistemas operativos UNIX.
+
+\subsubsection{Desde una terminal UNIX}
+El archivo main.pl puede ejecutarse como cualquier otro \textit{script}; solamente se debe navegar hasta el directorio del proyecto y desde allí ejecutar el comando:
+
+\bt
+    ./main.pl <nombre-base>
+\et
+
+\subsubsection{Desde el listener de Prolog}
+Asimiso, es posible ejecutar el programa desde el entrono de Prolog. Para ello, se debe consultar el archivo main.pl, y realizar la siguiente consulta:
+
+\bt
+    ?- main([<nombre-base>])
+\et
+
+\section{Estructura de la base de conocimiento}
+
+La estructura de base de conocimiento que utiliza este proyecto puede dividirse en tres secciones principales: conocimiento conceptual, conocimiento factual y conocimiento del mundo.
+
+\subsection{Conocimiento conceptual}
+
+En esta sección se almacena la información acerca de los objetos que participan en las actividades del robot. En el caso del asistente de supermercado, aquí se almacenan los productos de la tienda en forma de objetos, los cuales heredan las propiedades y relaciones de sus clases padre de acuerdo a la jerarquía implementada en el primer proyecto.
+
+\subsection{Conocimiento factual}
+
+En esta sección se almacenan las acciones realizables tanto por el empleado de la tienda como por el robot. También se mantienen aquí las decisiones que puede tomar el robot, así como la creencia que tiene el robot del mundo y las observaciones que éste adquiere durante la ejecución del programa.
+
+Finalmente, se almacenan aquí los resultados de cada uno de los módulos del proyecto, dentro de los objetos \texttt{diagnostico}, \texttt{decision} y \texttt{agenda}.
+
+\subsection{Conocimiento del mundo}
+
+En esta sección se guarda la configuración que tiene el mundo del robot; las ubicaciones a las que éste puede acceder y qué objetos hay actualmente en ellas.
+
+También existe un objeto \texttt{robot}, que mantiene los objetos que éste tiene en sus brazos y la posición en la que se encuentra.
 
 \section{Módulos}
 
@@ -66,7 +105,7 @@ La forma de nuestra función sucesor toma en cuenta la minima falla que pudo
 cometer el almacenista, es decir suponemos que los productos están en su
 lugar.
 
-\subsection{Módulo de toma de desición}
+\subsection{Módulo de toma de decisión}
 
 \subsection{Módulo de planeación}
 
