@@ -24,6 +24,9 @@ eliminarObjeto(Objeto, Ubicacion, Base, NuevaBase) :-
 	eliminar(Objeto, Elementos, NElementos),
 	modificar_propiedad(escenario, Ubicacion, NElementos, Base, NuevaBase).
 
+objetoEnUbicacion(Objeto, _ => Lista) :-
+	estaEn(Lista, Objeto).
+
 obtenerObservacion(Ubicacion, Base, Observacion) :-
 	propiedadesObjeto(escenario, Base, Props),
 	buscar(Ubicacion => _, Props, _ => Observacion).
