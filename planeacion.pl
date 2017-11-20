@@ -20,13 +20,13 @@ planeacion(Base, NuevaBase) :-
 	writeln('Los objetivos del plan son:'),
 	imprimirLista(Objetivos),
 	nodoInicial(Base, Inicio),
-	writeln('Nodo inicial'),
-	writeln(Inicio),
 	busquedaPlan([], [Inicio], Objetivos, Base, Plan),
 	writeln('Plan encontrado:'),
 	imprimirLista(Plan),
-	filtrar(objetoSeLlama(diagnostico), Base, Objetos),
-	agregarPropiedadObjetos(Objetos, parar, Base, NuevaBase).
+	buscar(objeto([agenda], _, _, _), Base, objeto(N, A, P, R)),
+	reemplazar(objeto(N, A, P, R), objeto(N, A, Plan, R), Base, Base2),
+	filtrar(objetoSeLlama(diagnostico), Base2, Objetos),
+	agregarPropiedadObjetos(Objetos, parar, Base2, NuevaBase).
 
 % Algoritmo de búsqueda -------------------------------------------------------
 
