@@ -34,11 +34,7 @@ busquedaPlan(_, _, [], _, []).
 %busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
 busquedaPlan(_, Grises, Objetivos, Base, _) :-
 	Grises = [Primero | _],
-	extensionClase(acciones_robot, Base, Acciones),
-	expandirNodo(Primero, Acciones, Base, [Suc1 | Suc]),
-	writeln('Sucesores:'),
-	imprimirLista([Suc1 | Suc]),
-	recompensa(Suc1, Objetivos, Base, Recompensa),
+	recompensa(Primero, Objetivos, Base, Recompensa),
 	writeln('Resultado:'),
 	writeln(Recompensa).
 	/*
@@ -258,6 +254,7 @@ costoAccion(Accion, Base, Costo) :-
 	agregar(Costo, Args2, PatronCosto),
 	buscar(PatronCosto, Costos, _).
 
+recompensa(nodo(_, [], _), _, _, 0).
 recompensa(nodo(_, Acciones, _), Objetivos, Base, Recompensa) :-
 	invertir(Acciones, [Ultima | AccionesInv]),
 	recompensaAccion(Ultima, AccionesInv, Objetivos, Base, Recompensa).
