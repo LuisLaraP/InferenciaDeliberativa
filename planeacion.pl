@@ -31,12 +31,10 @@ planeacion(Base, NuevaBase) :-
 % Algoritmo de búsqueda -------------------------------------------------------
 
 busquedaPlan(_, _, [], _, []).
-%busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
-busquedaPlan(_, Grises, Objetivos, Base, _) :-
-	Grises = [Primero | _],
-	recompensa(Primero, Objetivos, Base, Recompensa),
+busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
+	maximaRecompensa(Grises, Objetivos, Base, Maximo, _),
 	writeln('Resultado:'),
-	writeln(Recompensa).
+	writeln(Maximo).
 	/*
 	maximaRecompensa(Grises, Blancos, Objetivos, Base, Maximo, _),
 	eliminar(Maximo, Grises, Grises2),
@@ -66,11 +64,11 @@ expandirNodo(Nodo, [[A] | As], Base, Sucesores) :-
 	expandirNodo(Nodo, As, Base, SucAs),
 	concatena(SucA, SucAs, Sucesores).
 
-maximaRecompensa([G], Blancos, Objetivos, Base, G, Recompensa) :-
-	recompensa(G, Blancos, Objetivos, Base, Recompensa).
-maximaRecompensa([G | Gs], Blancos, Objetivos, Base, Maximo, Recompensa) :-
-	maximaRecompensa(Gs, Blancos, Objetivos, Base, SigMax, SigRec),
-	recompensa(G, Blancos, Objetivos, Base, Actual),
+maximaRecompensa([G], Objetivos, Base, G, Recompensa) :-
+	recompensa(G, Objetivos, Base, Recompensa).
+maximaRecompensa([G | Gs], Objetivos, Base, Maximo, Recompensa) :-
+	maximaRecompensa(Gs, Objetivos, Base, SigMax, SigRec),
+	recompensa(G, Objetivos, Base, Actual),
 	(Actual > SigRec
 	-> Maximo = G, Recompensa = Actual
 	; Maximo = SigMax, Recompensa = SigRec
