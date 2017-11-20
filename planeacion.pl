@@ -31,12 +31,16 @@ planeacion(Base, NuevaBase) :-
 % Algoritmo de búsqueda -------------------------------------------------------
 
 busquedaPlan(_, _, [], _, []).
-busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
+%busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
+busquedaPlan(_, Grises, Objetivos, Base, _) :-
 	Grises = [Primero | _],
-	Primero = nodo(_, Camino, _),
-	costoCamino(Camino, Base, Costo),
+	extensionClase(acciones_robot, Base, Acciones),
+	expandirNodo(Primero, Acciones, Base, [Suc1 | Suc]),
+	writeln('Sucesores:'),
+	imprimirLista([Suc1 | Suc]),
+	recompensa(Suc1, Objetivos, Base, Recompensa),
 	writeln('Resultado:'),
-	writeln(Costo).
+	writeln(Recompensa).
 	/*
 	maximaRecompensa(Grises, Blancos, Objetivos, Base, Maximo, _),
 	eliminar(Maximo, Grises, Grises2),
@@ -254,9 +258,9 @@ costoAccion(Accion, Base, Costo) :-
 	agregar(Costo, Args2, PatronCosto),
 	buscar(PatronCosto, Costos, _).
 
-recompensa(Nodo, Blancos, Objetivos, Base, Recompensa) :-
-	generarCamino(Nodo, Blancos, Camino),
-	recompensaCamino(Camino, Objetivos, [], Base, Recompensa).
+recompensa(nodo(_, Acciones, _), Objetivos, Base, Recompensa) :-
+	invertir(Acciones, [Ultima | AccionesInv]),
+	recompensaAccion(Ultima, AccionesInv, Objetivos, Base, Recompensa).
 
 recompensaCamino([], _, _, _, 0).
 recompensaCamino([nodo(_, nil, _) | Cs], Objetivos, AccReal, Base, Recompensa) :-
