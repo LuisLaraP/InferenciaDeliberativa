@@ -117,7 +117,7 @@ eliminaNoPresentes(Ignorado,B,L,N):-
 %posteriormente trazar la ruta del diagnostico a traves del árbol de busqueda en el que cada estado sucesor tome en cuenta el numero de productno en el estante
 
 	
-% ---------PREDICADOS AUXILIARES DE DIAGNÓSTICO----------
+% Utilidades-----------------------------------------------
 	
 % Dado un estante ei y una lista de estantes, devuelve
 % su lista de productos. 
