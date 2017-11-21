@@ -30,7 +30,9 @@
 	clase(acciones_robot, acciones, [], []),
 	clase(decisiones_robot, acciones, [], []),
 	clase(estados, top, [], []),
-	clase(observaciones, estados, [], []),
+	clase(observaciones, estados,[], []),
+	objeto([o2],observaciones,[e2 => []],[]),
+	
 	clase(procesos, top, [], []),
 
 	objeto([mover], acciones_empleado, [], []),
