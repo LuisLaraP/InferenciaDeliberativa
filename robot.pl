@@ -12,6 +12,10 @@
 
 :- op(800, xfx, '=>').
 
+ubicacionObjeto(Objeto, Base, Ubicacion) :-
+	propiedadesObjeto(creencia, Base, Props),
+	filtrar(objetoEnUbicacion(Objeto), Props, [Ubicacion => _ | _]).
+
 objetoDerecho(Base, Objeto) :-
 	propiedadesObjeto(robot, Base, Props),
 	buscar(brazo_derecho => _, Props, _ => Objeto).

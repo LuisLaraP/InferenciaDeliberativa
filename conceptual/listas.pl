@@ -74,11 +74,19 @@ filtrar(Condicion, [_ | R], Filtrada, Resultado) :-
 	Res = Filtrada,
 	filtrar(Condicion, R, Res, Resultado), !.
 
-% Muestra la lista dada en pantalla. Cada elemento se imprime en una línea porobjetoSeLlama(hola, objeto([hola], adios, [], [])).
+% Muestra la lista dada en pantalla. Cada elemento se imprime en una línea por
 % separado.
 %	Arg. 1 - Lista a imprimir.
 imprimirLista(Lista) :-
 	paraCada(Lista, writeln).
+
+% Invierte el orden de los elementos de la lista.
+%	Arg. 1 - Lista a invertir.
+%	Arg. 2 - Lista resultado.
+invertir([], []).
+invertir([X | Xs], R) :-
+	invertir(Xs, R2),
+	agregar(X, R2, R).
 
 % Llama a una función para cada miembro de la lista proporcionada. Este
 % predicado es verdadero si la función dada es verdadera para todos los
@@ -101,7 +109,15 @@ reemplazar(_, _, [], []).
 reemplazar(Original, Nuevo, [Original | R], [Nuevo | NuevaCola]) :-
 	reemplazar(Original, Nuevo, R, NuevaCola), !.
 reemplazar(Original, Nuevo, [C | R], [C | NuevaCola]) :-
-	reemplazar(Original, Nuevo, R, NuevaCola), !.	
+	reemplazar(Original, Nuevo, R, NuevaCola), !.
+
+% Verdadero si ambas listas contienen exactamente los mismos elementos, sin
+% importar el orden.
+%	Arg. 1 - Lista 1.
+%	Arg. 2 - Lista 2.
+sonIguales(Lista1, Lista2) :-
+	eliminarTodos(Lista1, Lista2, []),
+	eliminarTodos(Lista2, Lista1, []).
 
 %concatena dos listas
 concatena([],L,L).
