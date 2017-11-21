@@ -18,8 +18,9 @@ diagnostico(Base, NuevaBase):-
 	observacionesActuales(Base,Actuales),
 	creenciaActual(Base,Creencia),
 	asignarPosiciones(Actuales,Creencia,NuevaCreencia),
-	modificar_propiedad(creencia,Creencia,NuevaCreencia,Base,NuevaBase),
-	write(NuevaCreencia).
+	buscar(objeto([creencia],_,_,_),Base,objeto(N,A,P,R)),
+	reemplazar(objeto(N,A,P,R),objeto(N,A,NuevaCreencia,R),Base,NuevaBase),
+	write(NuevaBase).
 	
 
 % Busca en la base actual las observaciones a tener en cuenta

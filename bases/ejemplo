@@ -31,7 +31,8 @@
 	clase(decisiones_robot, acciones, [], []),
 	clase(estados, top, [], []),
 	clase(observaciones, estados,[], []),
-	objeto([o2],observaciones,[e2 => []],[]),
+	objeto([o1],observaciones,[e2 => []],[]),
+	objeto([o2],observaciones,[e3 => [bisquets,brownies]],[]),
 	
 	clase(procesos, top, [], []),
 
@@ -60,7 +61,7 @@
 	], []),
 	objeto([entregar], decisiones_robot, [], []),
 	objeto([reacomodar], decisiones_robot, [], []),
-	objeto([creencia], estados, [inicio => [], e1 => [cerveza1, refresco1], e2 => [sopa1, cereal1], e3 => [galletas1]], []),
+	objeto([creencia], estados, [inicio => [],e1=>[cerveza1,refresco1,jumex],e2=>[],e3=>[atun,cereal1,sopa1,bisquets,brownies]], []),
 	objeto([diagnostico], procesos, [], []),
 	objeto([decision], procesos, [], []),
 	objeto([agenda], procesos, [mover(inicio,e1)], []),
