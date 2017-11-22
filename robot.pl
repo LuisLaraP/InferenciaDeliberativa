@@ -12,6 +12,20 @@
 
 :- op(800, xfx, '=>').
 
+costo(Accion, Base, Costo) :-
+	Accion =.. [Nombre | Args],
+	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
+	buscar(costo => _, Props, _ => Exitos),
+	agregar(Costo, Args, PatronCosto),
+	buscar(PatronCosto, Exitos, _), !.
+costo(Accion, Base, Costo) :-
+	Accion =.. [Nombre | Args],
+	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
+	buscar(costo => _, Props, _ => Exitos),
+	invertir(Args, Args2),
+	agregar(Costo, Args2, PatronCosto),
+	buscar(PatronCosto, Exitos, _).
+
 ubicacionObjeto(Objeto, Base, Ubicacion) :-
 	propiedadesObjeto(creencia, Base, Props),
 	filtrar(objetoEnUbicacion(Objeto), Props, [Ubicacion => _ | _]).
