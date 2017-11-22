@@ -111,9 +111,23 @@ ejecutarAccion(mover(Inicio, Fin), Base, NuevaBase, Costo) :-
 	marcarVisitada(Fin, Base, Base2),
 	modificar_propiedad(robot, posicion, Fin, Base2, Base3),
 	obtenerObservacion(Fin, Base3, Observacion),
-	verificarObservacion(Observacion, Fin, Base3),
-	guardarObservacion(Observacion, Fin, Base3, NuevaBase),
-	costo(mover(Inicio, Fin), Base3, Costo),
+	(verificarObservacion(Observacion, Fin, Base3)
+	->	Base5 = Base3
+	;	buscar(objeto([agenda], _, _, _), Base3, objeto(_, A, P, R)),
+		reemplazar(
+			objeto([agenda], A, P, R),
+			objeto([agenda], A, [], R),
+			Base3, Base4
+		),
+		buscar(objeto([diagnostico], _, _, _), Base3, objeto(_, Ad, Pd, Rd)),
+		reemplazar(
+			objeto([diagnostico], Ad, Pd, Rd),
+			objeto([diagnostico], Ad, [], Rd),
+			Base4, Base5
+		)
+	),
+	guardarObservacion(Observacion, Fin, Base5, NuevaBase),
+	costo(mover(Inicio, Fin), Base5, Costo),
 	writeln('éxito'), !.
 ejecutarAccion(mover(Inicio, Fin), Base, NuevaBase, Costo) :-
 	modificar_propiedad(robot, posicion, Fin, Base, NuevaBase),
