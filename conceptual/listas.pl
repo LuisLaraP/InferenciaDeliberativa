@@ -88,6 +88,15 @@ invertir([X | Xs], R) :-
 	invertir(Xs, R2),
 	agregar(X, R2, R).
 
+% Reemplaza todas las ocurrencias de nil en una lista por variables anónimas.
+%	Arg. 1 - Lista a modificar.
+%	Arg. 2 - Lista resultado.
+nulificar([], []).
+nulificar([nil | Xs], [_ | Rs]) :-
+	nulificar(Xs, Rs), !.
+nulificar([X | Xs], [X | Rs]) :-
+	nulificar(Xs, Rs), !.
+
 % Llama a una función para cada miembro de la lista proporcionada. Este
 % predicado es verdadero si la función dada es verdadera para todos los
 % elementos de la lista. Si la función resulta falsa para alguno de los
