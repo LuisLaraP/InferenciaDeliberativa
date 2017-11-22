@@ -111,7 +111,7 @@ ejecutarAccion(colocar(Objeto), Base, NuevaBase, Costo) :-
 	writeln('éxito'), !.
 
 ejecutarAccion(mover(Inicio, Fin), Base, NuevaBase, Costo) :-
-	ubicacionVisitada(Fin, Base),
+	\+ ubicacionVisitada(Fin, Base),
 	marcarVisitada(Fin, Base, Base2),
 	modificar_propiedad(robot, posicion, Fin, Base2, Base3),
 	obtenerObservacion(Fin, Base3, Observacion),
