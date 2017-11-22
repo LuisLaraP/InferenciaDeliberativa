@@ -18,6 +18,7 @@ agregarObjetoCreencia(Objeto, Ubicacion, Base, NuevaBase) :-
 	agregar(Objeto, Elementos, NElementos),
 	modificar_propiedad(creencia, Ubicacion, NElementos, Base, NuevaBase).
 
+costo(nil, _, 0).
 costo(Accion, Base, Costo) :-
 	Accion =.. [Nombre | Args],
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),

@@ -188,23 +188,8 @@ calcularSucesores(nodo(I, A, Estado), [mover(Inicio, Fin) | As], [nodo(I, A2, S)
 costoCamino([], _, 0).
 costoCamino([C | Cs], Base, Costo) :-
 	costoCamino(Cs, Base, Costo2),
-	costoAccion(C, Base, Costo1),
+	costo(C, Base, Costo1),
 	Costo is Costo1 + Costo2.
-
-costoAccion(nil, _, 0).
-costoAccion(Accion, Base, Costo) :-
-	Accion =.. [Nombre | Args],
-	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
-	buscar(costo => _, Props, _ => Costos),
-	agregar(Costo, Args, PatronCosto),
-	buscar(PatronCosto, Costos, _), !.
-costoAccion(Accion, Base, Costo) :-
-	Accion =.. [Nombre | Args],
-	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
-	buscar(costo => _, Props, _ => Costos),
-	invertir(Args, Args2),
-	agregar(Costo, Args2, PatronCosto),
-	buscar(PatronCosto, Costos, _).
 
 recompensa(nodo(_, [], _), _, _, 0).
 recompensa(nodo(_, Acciones, _), Objetivos, Base, Recompensa) :-
