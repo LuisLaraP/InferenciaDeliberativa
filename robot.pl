@@ -23,25 +23,25 @@ costo(Accion, Base, Costo) :-
 	Accion =.. [Nombre | Args],
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
 	buscar(costo => _, Props, _ => Costos),
-	revisarPatron(Args, Costos, Costo).
+	revisarPatron(Args, Costos, Costo), !.
 costo(Accion, Base, Costo) :-
 	Accion =.. [Nombre | Args],
 	invertir(Args, Inv),
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
 	buscar(costo => _, Props, _ => Costos),
-	revisarPatron(Inv, Costos, Costo).
+	revisarPatron(Inv, Costos, Costo), !.
 
 probExito(Accion, Base, P) :-
 	Accion =.. [Nombre | Args],
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
 	buscar(exito => _, Props, _ => Exitos),
-	revisarPatron(Args, Exitos, P).
+	revisarPatron(Args, Exitos, P), !.
 probExito(Accion, Base, P) :-
 	Accion =.. [Nombre | Args],
 	invertir(Args, Inv),
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
 	buscar(exito => _, Props, _ => Exitos),
-	revisarPatron(Inv, Exitos, P).
+	revisarPatron(Inv, Exitos, P), !.
 
 eliminarObjetoCreencia(Objeto, Ubicacion, Base, NuevaBase) :-
 	propiedadesObjeto(creencia, Base, Props),
