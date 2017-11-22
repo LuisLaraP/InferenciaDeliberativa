@@ -59,11 +59,7 @@ ejecutarPlan(Base, Base, 0).
 % Acciones --------------------------------------------------------------------
 
 ejecutarAccion(Accion, Base, Base, 0) :-
-	Accion =.. [Nombre | Args],
-	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
-	buscar(exito => _, Props, _ => Exitos),
-	agregar(P, Args, PatronExito),
-	buscar(PatronExito, Exitos, _),
+	probExito(Accion, Base, P),
 	X is random_float,
 	X > P,
 	writeln('fracaso'), !, fail.

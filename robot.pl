@@ -16,13 +16,25 @@ costo(Accion, Base, Costo) :-
 	Accion =.. [Nombre | Args],
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
 	buscar(costo => _, Props, _ => Costos),
-	obtenerCosto(Args, Costos, Costo).
+	revisarPatron(Args, Costos, Costo).
 costo(Accion, Base, Costo) :-
 	Accion =.. [Nombre | Args],
 	invertir(Args, Inv),
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
 	buscar(costo => _, Props, _ => Costos),
-	obtenerCosto(Inv, Costos, Costo).
+	revisarPatron(Inv, Costos, Costo).
+
+probExito(Accion, Base, P) :-
+	Accion =.. [Nombre | Args],
+	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
+	buscar(exito => _, Props, _ => Exitos),
+	revisarPatron(Args, Exitos, P).
+probExito(Accion, Base, P) :-
+	Accion =.. [Nombre | Args],
+	invertir(Args, Inv),
+	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
+	buscar(exito => _, Props, _ => Exitos),
+	revisarPatron(Inv, Exitos, P).
 
 ubicacionObjeto(Objeto, Base, Ubicacion) :-
 	propiedadesObjeto(creencia, Base, Props),
@@ -36,12 +48,12 @@ objetoIzquierdo(Base, Objeto) :-
 	propiedadesObjeto(robot, Base, Props),
 	buscar(brazo_izquierdo => _, Props, _ => Objeto).
 
-obtenerCosto(Args, [L | _], Costo) :-
+revisarPatron(Args, [L | _], Res) :-
 	nulificar(L, Bnil),
-	agregar(Costo, Args, Patron),
+	agregar(Res, Args, Patron),
 	Bnil = Patron, !.
-obtenerCosto(Args, [_ | Ls], Costo) :-
-	obtenerCosto(Args, Ls, Costo).
+revisarPatron(Args, [_ | Ls], Res) :-
+	revisarPatron(Args, Ls, Res).
 
 posicionActual(Base, Posicion) :-
 	propiedadesObjeto(robot, Base, Props),
