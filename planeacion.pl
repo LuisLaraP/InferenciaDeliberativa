@@ -64,8 +64,12 @@ maximaRecompensa([G | Gs], Objetivos, Base, Maximo, Recompensa) :-
 	maximaRecompensa(Gs, Objetivos, Base, SigMax, SigRec),
 	recompensa(G, Objetivos, Base, Actual),
 	(Actual > SigRec
-	-> Maximo = G, Recompensa = Actual
-	; Maximo = SigMax, Recompensa = SigRec
+	->	Maximo = G, Recompensa = Actual
+	;	(Actual == SigRec
+		->	minimoCosto([G, SigMax], Base, Maximo, _),
+			recompensa(Maximo, Objetivos, Base, Recompensa)
+		;	Maximo = SigMax, Recompensa = SigRec
+		)
 	).
 
 minimoCosto([nodo(I, A, F)], Base, nodo(I, A, F), Costo) :-
