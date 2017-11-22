@@ -39,18 +39,10 @@ busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
 	expandirNodo(Maximo, Acciones, Base, Sucesores),
 	concatena(Grises2, Sucesores, Grises3),
 	objetivosCumplidos(Maximo, Objetivos, Base, Cumplidos),
-	(Cumplidos == []
-	->	NBlancos = Blancos2,
-		NGrises = Grises3,
-		NObjetivos = Objetivos,
-		PlanActual = []
-	;	eliminarTodos(Cumplidos, Objetivos, NObjetivos),
-		NBlancos = [],
-		Maximo = nodo(_, PlanActual, S),
-		NGrises = [nodo(S, [], S)]
-	),
-	busquedaPlan(NBlancos, NGrises, NObjetivos, Base, SigPlan),
-	concatena(PlanActual, SigPlan, Plan).
+	(sonIguales(Objetivos, Cumplidos)
+	->	Maximo = nodo(_, Plan, _)
+	;	busquedaPlan(Blancos2, Grises3, Objetivos, Base, Plan)
+	).
 
 expandirNodo(_, [], _, []).
 expandirNodo(Nodo, [[A] | As], Base, Sucesores) :-
