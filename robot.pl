@@ -15,16 +15,14 @@
 costo(Accion, Base, Costo) :-
 	Accion =.. [Nombre | Args],
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
-	buscar(costo => _, Props, _ => Exitos),
-	agregar(Costo, Args, PatronCosto),
-	buscar(PatronCosto, Exitos, _), !.
+	buscar(costo => _, Props, _ => Costos),
+	obtenerCosto(Args, Costos, Costo).
 costo(Accion, Base, Costo) :-
 	Accion =.. [Nombre | Args],
+	invertir(Args, Inv),
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
-	buscar(costo => _, Props, _ => Exitos),
-	invertir(Args, Args2),
-	agregar(Costo, Args2, PatronCosto),
-	buscar(PatronCosto, Exitos, _).
+	buscar(costo => _, Props, _ => Costos),
+	obtenerCosto(Inv, Costos, Costo).
 
 ubicacionObjeto(Objeto, Base, Ubicacion) :-
 	propiedadesObjeto(creencia, Base, Props),
@@ -37,6 +35,13 @@ objetoDerecho(Base, Objeto) :-
 objetoIzquierdo(Base, Objeto) :-
 	propiedadesObjeto(robot, Base, Props),
 	buscar(brazo_izquierdo => _, Props, _ => Objeto).
+
+obtenerCosto(Args, [L | _], Costo) :-
+	nulificar(L, Bnil),
+	agregar(Costo, Args, Patron),
+	Bnil = Patron, !.
+obtenerCosto(Args, [_ | Ls], Costo) :-
+	obtenerCosto(Args, Ls, Costo).
 
 posicionActual(Base, Posicion) :-
 	propiedadesObjeto(robot, Base, Props),
