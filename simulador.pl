@@ -72,7 +72,8 @@ ejecutarAccion(agarrar(Objeto), Base, NuevaBase, Costo) :-
 	objetoDerecho(Base, nil),
 	posicionActual(Base, Posicion),
 	eliminarObjeto(Objeto, Posicion, Base, BaseA),
-	modificar_propiedad(robot, brazo_derecho, Objeto, BaseA, NuevaBase),
+	eliminarObjetoCreencia(Objeto, Posicion, BaseA, BaseB),
+	modificar_propiedad(robot, brazo_derecho, Objeto, BaseB, NuevaBase),
 	costo(agarrar(Objeto), Base, Costo),
 	writeln('éxito'), !.
 
@@ -80,7 +81,8 @@ ejecutarAccion(agarrar(Objeto), Base, NuevaBase, Costo) :-
 	objetoIzquierdo(Base, nil),
 	posicionActual(Base, Posicion),
 	eliminarObjeto(Objeto, Posicion, Base, BaseA),
-	modificar_propiedad(robot, brazo_izquierdo, Objeto, BaseA, NuevaBase),
+	eliminarObjetoCreencia(Objeto, Posicion, BaseA, BaseB),
+	modificar_propiedad(robot, brazo_izquierdo, Objeto, BaseB, NuevaBase),
 	costo(agarrar(Objeto), Base, Costo),
 	writeln('éxito'), !.
 
@@ -94,7 +96,8 @@ ejecutarAccion(colocar(Objeto), Base, NuevaBase, Costo) :-
 	\+ objetoDerecho(Base, nil),
 	posicionActual(Base, Posicion),
 	agregarObjeto(Objeto, Posicion, Base, BaseA),
-	modificar_propiedad(robot, brazo_derecho, nil, BaseA, NuevaBase),
+	agregarObjetoCreencia(Objeto, Posicion, BaseA, BaseB),
+	modificar_propiedad(robot, brazo_derecho, nil, BaseB, NuevaBase),
 	costo(colocar(Objeto), Base, Costo),
 	writeln('éxito'), !.
 
@@ -102,7 +105,8 @@ ejecutarAccion(colocar(Objeto), Base, NuevaBase, Costo) :-
 	\+ objetoIzquierdo(Base, nil),
 	posicionActual(Base, Posicion),
 	agregarObjeto(Objeto, Posicion, Base, BaseA),
-	modificar_propiedad(robot, brazo_izquierdo, nil, BaseA, NuevaBase),
+	agregarObjetoCreencia(Objeto, Posicion, BaseA, BaseB),
+	modificar_propiedad(robot, brazo_izquierdo, nil, BaseB, NuevaBase),
 	costo(colocar(Objeto), Base, Costo),
 	writeln('éxito'), !.
 

@@ -12,6 +12,12 @@
 
 :- op(800, xfx, '=>').
 
+agregarObjetoCreencia(Objeto, Ubicacion, Base, NuevaBase) :-
+	propiedadesObjeto(creencia, Base, Props),
+	buscar(Ubicacion => _, Props, _ => Elementos),
+	agregar(Objeto, Elementos, NElementos),
+	modificar_propiedad(creencia, Ubicacion, NElementos, Base, NuevaBase).
+
 costo(Accion, Base, Costo) :-
 	Accion =.. [Nombre | Args],
 	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
@@ -25,6 +31,12 @@ costo(Accion, Base, Costo) :-
 	invertir(Args, Args2),
 	agregar(Costo, Args2, PatronCosto),
 	buscar(PatronCosto, Exitos, _).
+
+eliminarObjetoCreencia(Objeto, Ubicacion, Base, NuevaBase) :-
+	propiedadesObjeto(creencia, Base, Props),
+	buscar(Ubicacion => _, Props, _ => Elementos),
+	eliminar(Objeto, Elementos, NElementos),
+	modificar_propiedad(creencia, Ubicacion, NElementos, Base, NuevaBase).
 
 ubicacionObjeto(Objeto, Base, Ubicacion) :-
 	propiedadesObjeto(creencia, Base, Props),
