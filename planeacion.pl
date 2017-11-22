@@ -195,15 +195,19 @@ recompensa(nodo(_, [], _), _, _, 0).
 recompensa(nodo(_, Acciones, _), Objetivos, Base, Recompensa) :-
 	invertir(Acciones, [Ultima, Penultima | AccionesInv]), !,
 	recompensaAccion(Ultima, AccionesInv, Objetivos, Base, RecBase),
+	probExito(Ultima, Base, P),
+	RecExito is RecBase * P,
 	Ultima =.. [NomUlt | _],
 	Penultima =.. [NomPen | _],
 	(NomUlt == NomPen
-	->	Recompensa is RecBase / 2
-	;	Recompensa is RecBase
+	->	Recompensa is RecExito / 2
+	;	Recompensa is RecExito
 	).
 recompensa(nodo(_, Acciones, _), Objetivos, Base, Recompensa) :-
 	invertir(Acciones, [Ultima | AccionesInv]),
-	recompensaAccion(Ultima, AccionesInv, Objetivos, Base, Recompensa).
+	recompensaAccion(Ultima, AccionesInv, Objetivos, Base, RecBase),
+	probExito(Ultima, Base, P),
+	Recompensa is RecBase * P.
 
 recompensaAccion(Accion, ListaAcciones, _, _, 0) :-
 	estaEn(ListaAcciones, Accion), !.
