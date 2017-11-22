@@ -68,6 +68,18 @@ maximaRecompensa([G | Gs], Objetivos, Base, Maximo, Recompensa) :-
 	; Maximo = SigMax, Recompensa = SigRec
 	).
 
+minimoCosto([nodo(I, A, F)], Base, nodo(I, A, F), Costo) :-
+	costoCamino(A, Base, Costo).
+minimoCosto([nodo(I, A, F) | Ls], Base, Min, Costo) :-
+	minimoCosto(Ls, Base, MinSig, CostoSig),
+	costoCamino(A, Base, CostoActual),
+	(CostoActual < CostoSig
+	->	Min = nodo(I, A, F),
+		Costo = CostoActual
+	;	Min = MinSig,
+		Costo = CostoSig
+	).
+
 objetivosCumplidos(_, [], _, []).
 objetivosCumplidos(nodo(P, A, H), [O | Os], Base, Cumplidos) :-
 	objetivosCumplidos(nodo(P, A, H), Os, Base, Sig),
