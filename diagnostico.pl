@@ -13,15 +13,22 @@
 % Módulo de diagnóstico.
 %	Arg. 1 - Base de entrada.
 %	Arg. 2 - Base de salida.
-
 diagnostico(Base, NuevaBase):-
 	observacionesActuales(Base,Actuales),
-	creenciaActual(Base,Creencia),
-	asignarPosiciones(Actuales,Creencia,NuevaCreencia),
-	buscar(objeto([creencia],_,_,_),Base,objeto(N,A,P,R)),
-	reemplazar(objeto(N,A,P,R),objeto(N,A,NuevaCreencia,R),Base,NuevaBase),
-	write(NuevaBase).
-	
+	creenciaActual(Base,[H|T]),
+	asignarPosiciones(Actuales,T,NuevaCreencia),
+	buscar(objeto([reporte],_,_,_),Base,objeto(N,A,P,R)),
+	reemplazar(objeto(N,A,P,R),objeto(N,A,[H|NuevaCreencia],R),Base,NuevaBase),
+%	listaLocaciones(T,EstantesDisponibles),
+%	listaProductos(T,Productos),
+%	concatena([inicial],EstantesDisponibles,Locaciones),
+%	busqueda(Locaciones,Productos,[H|NuevaCreencia],Acciones),
+	writeln("El estado de los estantes es el siguiente:"),
+	writeln(NuevaCreencia),
+	writeln("y se llevó a cabo mediante las siguientes acciones:").
+
+
+% Asignación de productos ------------------------------------------
 
 % Busca en la base actual las observaciones a tener en cuenta
 % en el diagnóstico
@@ -42,7 +49,7 @@ observacionesActuales([_|T],L):-
 %    Arg. 2 - Lista con la creencia del acomodo de los 
 %             productos en los estantes.
 creenciaActual(Base,Creencia) :-
-	buscar(objeto([creencia],_,Creencia,_),Base,C),
+	buscar(objeto([reporte],_,Creencia,_),Base,C),
 	creenciaActual(C,Creencia).
 
 creenciaActual(objeto(_,_,Obs,_),Obs).
@@ -54,11 +61,27 @@ creenciaActual(objeto(_,_,Obs,_),Obs).
 %    Arg. 1 - La lista de observaciones.
 %    Arg. 2 - La creencia.
 %    Arg. 3 - La creencia actualizada
+
+% Cod 1 de asignarPosiciones
+%asignarPosiciones([],Creencia,Creencia).
+
+%asignarPosiciones(L,Creencia,NuevaCreencia):-
+%	last(L,Ultima),
+%	delete(L,Ultima,ParaIgnorar),
+%	eliminarTodos(ParaIgnorar,Creencia,AModificar),
+%	mezcla(Ultima,AModificar,Asignados),
+%	concatena(ParaIgnorar,Asignados,NuevaCreencia).
+
+%Cod 2 de asignar posiciones
 asignarPosiciones([],Creencia,Creencia).
 
 asignarPosiciones(L,Creencia,NuevaCreencia):-
 	last(L,Ultima),
-	mezcla(Ultima,Creencia,NuevaCreencia).
+	delete(L,Ultima,ParaIgnorar),
+	guardaPosiciones(Creencia,ParaIgnorar,Posiciones),
+	eliminarTodos(ParaIgnorar,Creencia,AModificar),
+	mezcla(Ultima,AModificar,Asignados),
+	reestableceEnPosiciones(ParaIgnorar,Posiciones,Asignados,NuevaCreencia).
 
 
 % Dada una observación (ei => [...]) y una creencia,
@@ -117,8 +140,16 @@ eliminaNoPresentes(Ignorado,B,L,N):-
 %primero colocar productos desordenados aleatoriamente en otros estantes
 %posteriormente trazar la ruta del diagnostico a traves del árbol de busqueda en el que cada estado sucesor tome en cuenta el numero de productno en el estante
 
+% Búsqueda----------------------------------------------------------
+%Estado
+%restantes
+% Obtiene lista de locaciones actual
+
+%listaLocaciones(Creencia,Locaciones)
+
+
 	
-% Utilidades-----------------------------------------------
+% Utilidades--------------------------------------------------------
 	
 % Dado un estante ei y una lista de estantes, devuelve
 % su lista de productos. 
@@ -168,3 +199,16 @@ borraDeListaUbicaciones(_,[],[]).
 borraDeListaUbicaciones(B,[X => E|T],[X => M|C]):-
 	eliminaVariosDeLista(B,E,M),
 	borraDeListaUbicaciones(B,T,C),!.
+
+% Guarda posiciones de ciertos elementos de una lista
+guardaPosiciones(_,[],[]).
+guardaPosiciones(L,[H|T],[N|P]):-
+	nth1(N,L,H,_),
+	guardaPosiciones(L,T,P),!.
+
+% Reestablece elementos en ciertas posiciones en una lista
+reestableceEnPosiciones([],[],R,R).
+
+reestableceEnPosiciones([Elem|T],[Pos|C],Asignados,Resultado):-
+	nth1(Pos,Parcial,Elem,Asignados),
+	reestableceEnPosiciones(T,C,Parcial,Resultado).
