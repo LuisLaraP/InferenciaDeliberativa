@@ -66,10 +66,10 @@
 % Mundo -----------------------------------------------------------------------
 	clase(ubicaciones, top, [], []),
 
-	objeto([inicio], ubicaciones, [], []),
-	objeto([e1], ubicaciones, [], []),
-	objeto([e2], ubicaciones, [], []),
-	objeto([e3], ubicaciones, [], []),
+	objeto([inicio], ubicaciones, [visitado => true], []),
+	objeto([e1], ubicaciones, [visitado => false], []),
+	objeto([e2], ubicaciones, [visitado => false], []),
+	objeto([e3], ubicaciones, [visitado => false], []),
 
 	objeto([escenario], top, [
 		inicio => [],

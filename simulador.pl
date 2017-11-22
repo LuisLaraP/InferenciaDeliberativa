@@ -107,9 +107,15 @@ ejecutarAccion(colocar(Objeto), Base, NuevaBase, Costo) :-
 	writeln('éxito'), !.
 
 ejecutarAccion(mover(Inicio, Fin), Base, NuevaBase, Costo) :-
-	modificar_propiedad(robot, posicion, Fin, Base, Base2),
-	obtenerObservacion(Fin, Base, Observacion),
-	verificarObservacion(Observacion, Fin, Base),
-	guardarObservacion(Observacion, Fin, Base2, NuevaBase),
+	ubicacionVisitada(Fin, Base),
+	marcarVisitada(Fin, Base, Base2),
+	modificar_propiedad(robot, posicion, Fin, Base2, Base3),
+	obtenerObservacion(Fin, Base3, Observacion),
+	verificarObservacion(Observacion, Fin, Base3),
+	guardarObservacion(Observacion, Fin, Base3, NuevaBase),
+	costo(mover(Inicio, Fin), Base3, Costo),
+	writeln('éxito'), !.
+ejecutarAccion(mover(Inicio, Fin), Base, NuevaBase, Costo) :-
+	modificar_propiedad(robot, posicion, Fin, Base, NuevaBase),
 	costo(mover(Inicio, Fin), Base, Costo),
 	writeln('éxito'), !.
