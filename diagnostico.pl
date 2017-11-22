@@ -18,14 +18,17 @@ diagnostico(Base, NuevaBase):-
 	creenciaActual(Base,[H|T]),
 	asignarPosiciones(Actuales,T,NuevaCreencia),
 	buscar(objeto([reporte],_,_,_),Base,objeto(N,A,P,R)),
-	reemplazar(objeto(N,A,P,R),objeto(N,A,[H|NuevaCreencia],R),Base,NuevaBase),
+	reemplazar(objeto(N,A,P,R),objeto(N,A,[H|NuevaCreencia],R),Base,Mod1),
+	buscar(objeto([creencia],_,_,_),Mod1,objeto(N2,A2,P2,R2)),
+	reemplazar(objeto(N2,A2,P2,R2),objeto(N2,A2,[H|NuevaCreencia]),Mod1,NuevaBase),
 %	listaLocaciones(T,EstantesDisponibles),
 %	listaProductos(T,Productos),
 %	concatena([inicial],EstantesDisponibles,Locaciones),
 %	busqueda(Locaciones,Productos,[H|NuevaCreencia],Acciones),
 	writeln("El estado de los estantes es el siguiente:"),
 	writeln(NuevaCreencia),
-	writeln("y se llevó a cabo mediante las siguientes acciones:").
+	writeln("y se llevó a cabo mediante las siguientes acciones:"),
+	write(NuevaBase).
 
 
 % Asignación de productos ------------------------------------------
@@ -61,27 +64,26 @@ creenciaActual(objeto(_,_,Obs,_),Obs).
 %    Arg. 1 - La lista de observaciones.
 %    Arg. 2 - La creencia.
 %    Arg. 3 - La creencia actualizada
-
-% Cod 1 de asignarPosiciones
-%asignarPosiciones([],Creencia,Creencia).
-
-%asignarPosiciones(L,Creencia,NuevaCreencia):-
-%	last(L,Ultima),
-%	delete(L,Ultima,ParaIgnorar),
-%	eliminarTodos(ParaIgnorar,Creencia,AModificar),
-%	mezcla(Ultima,AModificar,Asignados),
-%	concatena(ParaIgnorar,Asignados,NuevaCreencia).
-
-%Cod 2 de asignar posiciones
+% Opcion 1 de asignarPosiciones
 asignarPosiciones([],Creencia,Creencia).
 
 asignarPosiciones(L,Creencia,NuevaCreencia):-
 	last(L,Ultima),
 	delete(L,Ultima,ParaIgnorar),
-	guardaPosiciones(Creencia,ParaIgnorar,Posiciones),
 	eliminarTodos(ParaIgnorar,Creencia,AModificar),
 	mezcla(Ultima,AModificar,Asignados),
-	reestableceEnPosiciones(ParaIgnorar,Posiciones,Asignados,NuevaCreencia).
+	concatena(ParaIgnorar,Asignados,NuevaCreencia).
+
+%Cod 2 - Alternativa de  de asignar posiciones
+%asignarPosiciones([],Creencia,Creencia).
+%
+%asignarPosiciones(L,Creencia,NuevaCreencia):-
+%	last(L,Ultima),
+%	delete(L,Ultima,ParaIgnorar),
+%	guardaPosiciones(Creencia,ParaIgnorar,Posiciones),
+%	eliminarTodos(ParaIgnorar,Creencia,AModificar),
+%	mezcla(Ultima,AModificar,Asignados),
+%	reestableceEnPosiciones(ParaIgnorar,Posiciones,Asignados%,NuevaCreencia).
 
 
 % Dada una observación (ei => [...]) y una creencia,
