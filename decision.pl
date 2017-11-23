@@ -24,7 +24,9 @@ decision(Base, NuevaBase) :-
 	imprimirLista(Desordenados), nl,
 	expandirEntregas(ObjsEntrega, DecEntregas),
 	expandirDesordenados(Desordenados, DecDesorden),
-	concatena(DecEntregas, DecDesorden, Decisiones),
+	concatena(DecEntregas, DecDesorden, DecBase),
+	filtrar(decisionCumplida(Base), DecBase, Cumplidas),
+	eliminarTodos(Cumplidas, DecBase, Decisiones),
 	writeln('Se tomaron las siguientes decisiones:'),
 	imprimirLista(Decisiones), nl,
 	buscar(objeto([decision], _, _, _), Base, objeto(_, A, P, R)),
@@ -58,3 +60,18 @@ ubicacionIncorrecta(Base, Objeto) :-
 	propiedadesObjetoHerencia(Objeto, Base, Props),
 	buscar(estante => _, Props, _ => Estante),
 	\+ ubicacionObjeto(Objeto, Base, Estante).
+
+decisionCumplida(Base, entregar(Objeto)) :-
+	propiedadesObjeto(creencia, Base, Creencia),
+	buscar(inicio => _, Creencia, _ => Entregados),
+	estaEn(Entregados, Objeto),
+	write('El objetivo '),
+	write(entregar(Objeto)),
+	writeln(' ya se cumplió.').
+decisionCumplida(Base, reacomodar(Objeto)) :-
+	propiedadesObjetoHerencia(Objeto, Base, Props),
+	buscar(estante => _, Props, _ => Estante),
+	ubicacionObjeto(Objeto, Base, Estante),
+	write('El objetivo '),
+	write(entregar(Objeto)),
+	writeln(' ya se cumplió.').
