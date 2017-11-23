@@ -25,6 +25,10 @@ decision(Base, NuevaBase) :-
 	expandirEntregas(ObjsEntrega, Entregas),
 	expandirDesordenados(Desordenados, DecDesorden),
 	objetosAgarrados(Base, Agarrados),
+	(Agarrados == []
+	;	writeln('El robot tiene los siguientes objetos en brazos:'),
+		imprimirLista(Agarrados), nl
+	),
 	expandirDesordenados(Agarrados, DecAgarrados),
 	concatena(DecDesorden, DecAgarrados, Reacomodos),
 	fusionarObjetivos(Entregas, Reacomodos, DecBase),
