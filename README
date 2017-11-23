@@ -1,0 +1,15 @@
+Inferencia Deliberativa
+=======================
+
+Ejecución
+---------
+El archivo main.pl puede ser ejecutado como un script, reconocible por sistemas
+operativos UNIX. Para ejecutar el programa, desde una terminal (que no sea de
+Prolog), invocar el siguiente comando:
+
+./main.pl <nombre_base>
+
+Aunque también puede ejecutarse desde dentro de Prolog. En este caso, consultar
+el archivo main.pl y realizar la siguiente consulta:
+
+main([<nombre_base>]).

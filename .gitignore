@@ -1,4 +1,6 @@
 bases/prueba
+docs/latex_build/
+*.synctex.gz
 doc.aux
 doc.log
 doc.toc
