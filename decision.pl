@@ -22,9 +22,18 @@ decision(Base, NuevaBase) :-
 	objetosDesordenados(Base, Desordenados),
 	writeln('Los siguientes objetos están desordenados:'),
 	imprimirLista(Desordenados), nl,
-	expandirEntregas(ObjsEntrega, DecEntregas),
+	expandirEntregas(ObjsEntrega, Entregas),
 	expandirDesordenados(Desordenados, DecDesorden),
-	concatena(DecEntregas, DecDesorden, Decisiones),
+	objetosAgarrados(Base, Agarrados),
+	(Agarrados == []
+	;	writeln('El robot tiene los siguientes objetos en brazos:'),
+		imprimirLista(Agarrados), nl
+	),
+	expandirDesordenados(Agarrados, DecAgarrados),
+	concatena(DecDesorden, DecAgarrados, Reacomodos),
+	fusionarObjetivos(Entregas, Reacomodos, DecBase),
+	filtrar(decisionCumplida(Base), DecBase, Cumplidas),
+	eliminarTodos(Cumplidas, DecBase, Decisiones),
 	writeln('Se tomaron las siguientes decisiones:'),
 	imprimirLista(Decisiones), nl,
 	buscar(objeto([decision], _, _, _), Base, objeto(_, A, P, R)),
@@ -42,6 +51,17 @@ expandirDesordenados([], []).
 expandirDesordenados([D | Ds], [reacomodar(D) | Rs]) :-
 	expandirDesordenados(Ds, Rs).
 
+fusionarObjetivos([], Reacomodos, Reacomodos).
+fusionarObjetivos([entregar(O) | Es], Reacomodos, [entregar(O) | Rs]) :-
+	fusionarObjetivos(Es, Reacomodos, Rsig),
+	eliminar(reacomodar(O), Rsig, Rs).
+
+objetosAgarrados(Base, Objetos) :-
+	propiedadesObjeto(robot, Base, Props),
+	buscar(brazo_derecho => _, Props, _ => Der),
+	buscar(brazo_izquierdo => _, Props, _ => Izq),
+	eliminar(nil, [Der, Izq], Objetos).
+
 objetosDesordenados(Base, Objetos) :-
 	propiedadesObjeto(creencia, Base, Creencia),
 	concatenarUbicaciones(Creencia, Todos),
@@ -58,3 +78,18 @@ ubicacionIncorrecta(Base, Objeto) :-
 	propiedadesObjetoHerencia(Objeto, Base, Props),
 	buscar(estante => _, Props, _ => Estante),
 	\+ ubicacionObjeto(Objeto, Base, Estante).
+
+decisionCumplida(Base, entregar(Objeto)) :-
+	propiedadesObjeto(creencia, Base, Creencia),
+	buscar(inicio => _, Creencia, _ => Entregados),
+	estaEn(Entregados, Objeto),
+	write('El objetivo '),
+	write(entregar(Objeto)),
+	writeln(' ya se cumplió.').
+decisionCumplida(Base, reacomodar(Objeto)) :-
+	propiedadesObjetoHerencia(Objeto, Base, Props),
+	buscar(estante => _, Props, _ => Estante),
+	ubicacionObjeto(Objeto, Base, Estante),
+	write('El objetivo '),
+	write(entregar(Objeto)),
+	writeln(' ya se cumplió.').
