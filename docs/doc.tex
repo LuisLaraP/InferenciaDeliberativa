@@ -123,6 +123,8 @@ En primer lugar, este módulo revisa las órdenes del cliente, y crea objetivos 
 
 Finalmente, el módulo de toma de decisión organiza los objetivos de manera que se le dé prioridad a las peticiones del cliente. Después de satisfacer las órdenes del cliente, el robot puede dedicarse a reordenar los objetos que estén fuera de lugar.
 
+Ahora bien, puede suceder que este módulo sea ejecutado después de que el robot falló al ejecutar una acción, por lo que algunos objetivos podrían haberse cumplido, o el robot podría tener objetos en sus brazos. Para resolver estas situaciones, el módulo de toma de decisión verifica la lista de objetivos generados para ver si alguno ya se cumplió, y si es así, lo elimina de la lista. Adicionalmente, se crean objetivos de reacomodar para los objetos que el robot tiene en brazos. Como último paso de procesamiento, se eliminan aquellos objetivos que tienen una instancia de entregar y una de reacomodar con el mismo objeto, dejando sólo la de entregar.
+
 \subsection{Ejemplo de ejecución}
 
 Considérese el caso en el cual se tienen tres estantes; el primero de bebidas, el segundo de comida y por último el estante de pan. En dichos estantes se reparten los objetos que se muestran en el cuadro~\ref{tab:EjemploDecision}. Además, el cliente ha pedido que se le entregue el refresco. Se observa que la mayoría de los objetos están en los estantes adecuados, con excepción de la sopa y el cereal, que deberían estar en el estante 2.
