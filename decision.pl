@@ -24,7 +24,10 @@ decision(Base, NuevaBase) :-
 	imprimirLista(Desordenados), nl,
 	expandirEntregas(ObjsEntrega, DecEntregas),
 	expandirDesordenados(Desordenados, DecDesorden),
-	concatena(DecEntregas, DecDesorden, DecBase),
+	concatena(DecEntregas, DecDesorden, Dec2),
+	objetosAgarrados(Base, Agarrados),
+	expandirDesordenados(Agarrados, DecAgarrados),
+	concatena(Dec2, DecAgarrados, DecBase),
 	filtrar(decisionCumplida(Base), DecBase, Cumplidas),
 	eliminarTodos(Cumplidas, DecBase, Decisiones),
 	writeln('Se tomaron las siguientes decisiones:'),
@@ -43,6 +46,12 @@ expandirEntregas([E | Es], [entregar(E) | Rs]) :-
 expandirDesordenados([], []).
 expandirDesordenados([D | Ds], [reacomodar(D) | Rs]) :-
 	expandirDesordenados(Ds, Rs).
+
+objetosAgarrados(Base, Objetos) :-
+	propiedadesObjeto(robot, Base, Props),
+	buscar(brazo_derecho => _, Props, _ => Der),
+	buscar(brazo_izquierdo => _, Props, _ => Izq),
+	eliminar(nil, [Der, Izq], Objetos).
 
 objetosDesordenados(Base, Objetos) :-
 	propiedadesObjeto(creencia, Base, Creencia),
