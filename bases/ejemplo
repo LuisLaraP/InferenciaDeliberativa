@@ -78,8 +78,8 @@
 	objeto([escenario], top, [
 		inicio => [],
 		e1 => [refresco1, cerveza1, sopa1],
-		e2 => [galletas1],
-		e3 => [cereal1]
+		e2 => [cereal1],
+		e3 => [galletas1]
 	], []),
 	objeto([robot], top, [
 		brazo_derecho => nil,
