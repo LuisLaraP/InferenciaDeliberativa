@@ -69,6 +69,13 @@ Asimismo, es posible ejecutar el programa desde el entrono de Prolog. Para ello,
     ?- main([<nombre-base>])
 \et
 
+\section{Aspectos interesantes del proyecto}
+
+\begin{itemize}
+    \item El módulo de toma de decisiones permite la recuperación grácil de un plan ejecutado a medias. Verifica cuáles objetivos han sido cumplidos ya e incorpora la información acerca de los objetos en sus manos.
+    \item El algoritmo de búsqueda del módulo de planeación es multiobjetivo; considera varias de las decisiones a la vez para optimizar el plan generado. Antes de cumplir un objetivo, el módulo puede generar un plan que cumple parcialmente el objetivo siguiente, para economizar en el número de acciones y, por lo tanto, en el costo.
+\end{itemize}
+
 \section{Estructura de la base de conocimiento}
 
 La estructura de base de conocimiento que utiliza este proyecto puede dividirse en tres secciones principales: conocimiento conceptual, conocimiento factual y conocimiento del mundo.
@@ -115,20 +122,20 @@ entonces el diagnóstico se reduce a encontrar la secuencia de
 acciones que (en teoría) llevó a cabo el almacenista para
 acomodar los productos que indicó en su reporte.
 
-Si existe al menos una observación acerca de un estante en la base, se 
-comparan los objetos del estante en cuestión con lo que existían en la 
+Si existe al menos una observación acerca de un estante en la base, se
+comparan los objetos del estante en cuestión con lo que existían en la
 creencia, los que sobran se acomodan aleatoriamente en los otros estantes
 (porque si no están en el lugar que deben, el almacenista los pudo
 colocar en cualquier otro lugar). Una vez modificada la creencia con
-la información que nos dio la observación, se guarda en la base que se 
+la información que nos dio la observación, se guarda en la base que se
 pasará como parámetro al módulo de toma de desicion.
 
- 
+
 \subsubsection{Búsqueda}
 
-Para hacer una búsqueda se necesita la lista de estantes con los 
-productos de cada uno (dados por la asignación de productos que se 
-explico en el punto anterior) y una locación actual. También una lista 
+Para hacer una búsqueda se necesita la lista de estantes con los
+productos de cada uno (dados por la asignación de productos que se
+explico en el punto anterior) y una locación actual. También una lista
 de objetos y posiciones restantes.
 La forma en como se obtiene es realizando una búsqueda en la que en cada
 paso agregamos una acción ´´mover'' o ´´colocar'' hasta que la lista de
@@ -211,7 +218,5 @@ En la siguiente iteración, la acción mover a inicio es la única que recibe re
 Una vez en la posición inicio, la única acción recompensada del robot es colocar el refresco en la posición de inicio, que en este caso significa la entrega al cliente.
 
 Como este estado cumple el objetivo planteado y no existen más objetivos por cumplir, la búsqueda se detiene y se regresa el plan encontrado.
-
-\subsection{Utilitarios}
 
 \end{document}
