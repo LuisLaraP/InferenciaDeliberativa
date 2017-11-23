@@ -61,7 +61,7 @@
 	], []),
 	objeto([entregar], decisiones_robot, [], []),
 	objeto([reacomodar], decisiones_robot, [], []),
-	objeto([reporte], estados, [inicio=>[],e1=>[refresco1,cerveza1],e2=>[cereal1],e3=>[pan]], []),
+	objeto([reporte], estados, [inicio=>[],e1=>[refresco1,cerveza1],e2=>[],e3=>[pan]], []),
 	objeto([creencia],estados,[inicio=>[],e1=>[refresco1,cerveza1],e2=>[cereal1],e3=>[pan]],[]),
 
 

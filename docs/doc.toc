@@ -1,0 +1,19 @@
+\select@language {spanish}
+\contentsline {section}{\numberline {1}Funcionamiento del proyecto}{1}
+\contentsline {subsection}{\numberline {1.1}Carga de informaci\IeC {\'o}n}{1}
+\contentsline {subsection}{\numberline {1.2}Ejecuci\IeC {\'o}n}{1}
+\contentsline {subsubsection}{\numberline {1.2.1}Desde una terminal UNIX}{1}
+\contentsline {subsubsection}{\numberline {1.2.2}Desde el listener de Prolog}{1}
+\contentsline {section}{\numberline {2}Estructura de la base de conocimiento}{1}
+\contentsline {subsection}{\numberline {2.1}Conocimiento conceptual}{2}
+\contentsline {subsection}{\numberline {2.2}Conocimiento factual}{2}
+\contentsline {subsection}{\numberline {2.3}Conocimiento del mundo}{2}
+\contentsline {section}{\numberline {3}M\IeC {\'o}dulos}{2}
+\contentsline {subsection}{\numberline {3.1}Simulador}{2}
+\contentsline {subsection}{\numberline {3.2}M\IeC {\'o}dulo de diagn\IeC {\'o}stico}{2}
+\contentsline {subsubsection}{\numberline {3.2.1}Asignaci\IeC {\'o}n de productos}{2}
+\contentsline {subsubsection}{\numberline {3.2.2}B\IeC {\'u}squeda}{3}
+\contentsline {subsection}{\numberline {3.3}M\IeC {\'o}dulo de toma de decisi\IeC {\'o}n}{3}
+\contentsline {subsection}{\numberline {3.4}M\IeC {\'o}dulo de planeaci\IeC {\'o}n}{3}
+\contentsline {subsubsection}{\numberline {3.4.1}Ejemplo de ejecuci\IeC {\'o}n}{4}
+\contentsline {subsection}{\numberline {3.5}Utilitarios}{5}

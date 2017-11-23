@@ -20,18 +20,15 @@ diagnostico(Base, NuevaBase):-
 	buscar(objeto([reporte],_,_,_),Base,objeto(N,A,P,R)),
 	reemplazar(objeto(N,A,P,R),objeto(N,A,[H|NuevaCreencia],R),Base,Mod1),
 	buscar(objeto([creencia],_,_,_),Mod1,objeto(N2,A2,P2,R2)),
-	reemplazar(objeto(N2,A2,P2,R2),objeto(N2,A2,[H|NuevaCreencia]),Mod1,NuevaBase),
-%	listaLocaciones(T,EstantesDisponibles),
-%	listaProductos(T,Productos),
-%	concatena([inicial],EstantesDisponibles,Locaciones),
-%	busqueda(Locaciones,Productos,[H|NuevaCreencia],Acciones),
-	writeln("El estado de los estantes es el siguiente:"),
+	reemplazar(objeto(N2,A2,P2,R2),objeto(N2,A2,[H|NuevaCreencia],R2),Mod1,NuevaBase),
+	quitaVacios(NuevaCreencia,NoVacios),
+	transformar([H|NoVacios],S),
+	writeln("El estado de los estantes de acuerdo a mi diagnóstico es el siguiente:\n"),
 	writeln(NuevaCreencia),
-	writeln("y se llevó a cabo mediante las siguientes acciones:"),
-	write(NuevaBase).
+	writeln("\nY se llevó a cabo mediante las siguientes acciones:\n"),
+	write(S),
+	writeln("\n").
 
-
-% Asignación de productos ------------------------------------------
 
 % Busca en la base actual las observaciones a tener en cuenta
 % en el diagnóstico
@@ -74,7 +71,7 @@ asignarPosiciones(L,Creencia,NuevaCreencia):-
 	mezcla(Ultima,AModificar,Asignados),
 	concatena(ParaIgnorar,Asignados,NuevaCreencia).
 
-%Cod 2 - Alternativa de  de asignar posiciones
+%Cod 2 - Alternativa de  de asignar posiciones(no se usó)
 %asignarPosiciones([],Creencia,Creencia).
 %
 %asignarPosiciones(L,Creencia,NuevaCreencia):-
@@ -139,15 +136,45 @@ eliminaNoPresentes(Ignorado,B,L,N):-
 	borraDeListaUbicaciones(B,P,I),
 	nth1(Indice,N,Ignorado => Cont,I),!.
 	
-%primero colocar productos desordenados aleatoriamente en otros estantes
-%posteriormente trazar la ruta del diagnostico a traves del árbol de busqueda en el que cada estado sucesor tome en cuenta el numero de productno en el estante
 
-% Búsqueda----------------------------------------------------------
-%Estado
-%restantes
+
 % Obtiene lista de locaciones actual
+listaLocaciones([],[]).
 
-%listaLocaciones(Creencia,Locaciones)
+listaLocaciones([X=>_|T],[X|C]):-
+	listaLocaciones(T,C).
+
+% Obtiene la losta de productos
+listaProductos([],[]).
+
+listaProductos([_=>Y|T],[Y|C]):-
+	listaProductos(T,C).
+
+quitaVacios([],[]).
+
+quitaVacios([_=>[]|T],C):-
+	quitaVacios(T,C),!.
+
+quitaVacios([X=>Y|T],[X=>Y|C]):-
+	quitaVacios(T,C).
+
+transformar([inicio=>[],X=>Y|T],[mover(inicio,X)|C]):-
+	escribirObjetos(Y,YS),	
+	transformar(X,T,R),
+	concatena(YS,R,C),!.
+
+transformar(Fin,[],[mover(Fin,inicio)]).
+
+transformar(X,[Y=>Z|T],[mover(X,Y)|C]):-
+	escribirObjetos(Z,ZS),
+	transformar(Y,T,R),
+	concatena(ZS,R,C),!.
+	
+escribirObjetos([],[]).
+
+escribirObjetos([H|T],[colocar(H)|C]):-
+	escribirObjetos(T,C).
+
 
 
 	
