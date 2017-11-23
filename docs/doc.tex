@@ -157,7 +157,7 @@ Finalmente, el módulo de toma de decisión organiza los objetivos de manera que
 
 Ahora bien, puede suceder que este módulo sea ejecutado después de que el robot falló al ejecutar una acción, por lo que algunos objetivos podrían haberse cumplido, o el robot podría tener objetos en sus brazos. Para resolver estas situaciones, el módulo de toma de decisión verifica la lista de objetivos generados para ver si alguno ya se cumplió, y si es así, lo elimina de la lista. Adicionalmente, se crean objetivos de reacomodar para los objetos que el robot tiene en brazos. Como último paso de procesamiento, se eliminan aquellos objetivos que tienen una instancia de entregar y una de reacomodar con el mismo objeto, dejando sólo la de entregar.
 
-\subsection{Ejemplo de ejecución}
+\subsubsection{Ejemplo de ejecución}
 
 Considérese el caso en el cual se tienen tres estantes; el primero de bebidas, el segundo de comida y por último el estante de pan. En dichos estantes se reparten los objetos que se muestran en el cuadro~\ref{tab:EjemploDecision}. Además, el cliente ha pedido que se le entregue el refresco. Se observa que la mayoría de los objetos están en los estantes adecuados, con excepción de la sopa y el cereal, que deberían estar en el estante 2.
 
@@ -218,5 +218,68 @@ En la siguiente iteración, la acción mover a inicio es la única que recibe re
 Una vez en la posición inicio, la única acción recompensada del robot es colocar el refresco en la posición de inicio, que en este caso significa la entrega al cliente.
 
 Como este estado cumple el objetivo planteado y no existen más objetivos por cumplir, la búsqueda se detiene y se regresa el plan encontrado.
+
+\section{Evidencia empírica del funcionamiento del proyecto}
+
+A continuación probamos el proyecto con varios casos.
+
+\subsection{Ejemplos}
+
+\subsubsection{Problema similar al \emph{storyboard}}
+
+En este ejemplo trabajamos con tres estantes y los mismos
+productos del \emph{storyboard} que se nos proporcionó.
+
+\begin{itemize}
+\item Reporte del almacenista:
+  \bt
+  e1 => [cerveza1,refresco1]
+  e2 => [sopa1,cereal1]
+  e3 => [galletas]
+  \et
+\item Sin embargo el mundo real se encuentra de la siguiente manera:
+  \bt
+  e1 => [refresco1,cerveza1,sopa1]
+  e2 => [galletas1]
+  e3 => [cereal1]
+  \et
+\item El cliente pide un refresco.
+\item La base de conocimiento de este ejemplo se encuentra
+  en el directorio \emph{bases} con el nombre \emph{ejemplo}  y la corrida del simulador
+  en el directorio \emph{docs}.
+\end{itemize}
+
+Resultado: En la ejecución hubo algunas acciones del robot no
+exitosas pero los tres módulos responden de forma adecuada en
+cad paso.
+
+\subsubsection{Problema con más objetos}
+
+En este ejemplo trabajamos con los mismos tres estantes pero
+ahora tenemos productos extra: jugo (bebida) y brownies (pan).
+Además, en la realidad, el robot se encuentra con un estante
+vacío.
+
+\begin{itemize}
+\item Reporte del almacenista:
+  \bt
+  e1 => [cerveza1,refresco1,jugo1]
+  e2 => [sopa1,cereal1]
+  e3 => [galletas1,brownies1]
+  \et
+\item Sin embargo el mundo real se encuentra de la siguiente manera:
+  \bt
+  e1 => [refresco1,cerveza1,brownies1]
+  e2 => []
+  e3 => [cereal1,jugo1,galletas1,sopa1]
+  \et
+ \item El cliente pide una sopa.
+\item La base de conocimiento de este ejemplo se encuentra
+  en el directorio \emph{bases} con el nombre \emph{ejemplo2} y la
+  corrida del simulador en el directorio \emph{docs}.
+\end{itemize}
+
+Resultado: La ejecución se realiza de manera exitosa.
+
 
 \end{document}
