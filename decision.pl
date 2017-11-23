@@ -22,7 +22,9 @@ decision(Base, NuevaBase) :-
 	objetosDesordenados(Base, Desordenados),
 	writeln('Los siguientes objetos están desordenados:'),
 	imprimirLista(Desordenados), nl,
-	expandirEntregas(ObjsEntrega, Decisiones),
+	expandirEntregas(ObjsEntrega, DecEntregas),
+	expandirDesordenados(Desordenados, DecDesorden),
+	concatena(DecEntregas, DecDesorden, Decisiones),
 	writeln('Se tomaron las siguientes decisiones:'),
 	imprimirLista(Decisiones), nl,
 	buscar(objeto([decision], _, _, _), Base, objeto(_, A, P, R)),
@@ -35,6 +37,10 @@ decision(Base, NuevaBase) :-
 expandirEntregas([], []).
 expandirEntregas([E | Es], [entregar(E) | Rs]) :-
 	expandirEntregas(Es, Rs).
+
+expandirDesordenados([], []).
+expandirDesordenados([D | Ds], [reacomodar(D) | Rs]) :-
+	expandirDesordenados(Ds, Rs).
 
 objetosDesordenados(Base, Objetos) :-
 	propiedadesObjeto(creencia, Base, Creencia),
