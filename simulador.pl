@@ -28,7 +28,7 @@ simulador(Base, NuevaBase) :-
 	writeln('======================================================'),
 	ejecutarPlan(BaseC, BasePlan, Costo),
 	write('El costo de las acciones realizadas fue: '),
-	writeln(Costo),
+	writeln(Costo), nl,
 	simulador(BasePlan, NuevaBase).
 
 % Este predicado es verdadero si el robot aún tiene acciones pendientes por
@@ -111,6 +111,7 @@ ejecutarAccion(mover(Inicio, Fin), Base, NuevaBase, Costo) :-
 	marcarVisitada(Fin, Base, Base2),
 	modificar_propiedad(robot, posicion, Fin, Base2, Base3),
 	obtenerObservacion(Fin, Base3, Observacion),
+	writeln('éxito'),
 	(verificarObservacion(Observacion, Fin, Base3)
 	->	Base5 = Base3
 	;	buscar(objeto([agenda], _, _, _), Base3, objeto(_, A, P, R)),
@@ -124,11 +125,11 @@ ejecutarAccion(mover(Inicio, Fin), Base, NuevaBase, Costo) :-
 			objeto([diagnostico], Ad, Pd, Rd),
 			objeto([diagnostico], Ad, [], Rd),
 			Base4, Base5
-		)
+		), nl,
+		writeln('La observación del estante no coincide con la creencia.'), nl
 	),
 	guardarObservacion(Observacion, Fin, Base5, NuevaBase),
-	costo(mover(Inicio, Fin), Base5, Costo),
-	writeln('éxito'), !.
+	costo(mover(Inicio, Fin), Base5, Costo), !.
 ejecutarAccion(mover(Inicio, Fin), Base, NuevaBase, Costo) :-
 	modificar_propiedad(robot, posicion, Fin, Base, NuevaBase),
 	costo(mover(Inicio, Fin), Base, Costo),

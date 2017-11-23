@@ -18,11 +18,11 @@
 planeacion(Base, NuevaBase) :-
 	propiedadesObjeto(decision, Base, Objetivos),
 	writeln('Los objetivos del plan son:'),
-	imprimirLista(Objetivos),
+	imprimirLista(Objetivos), nl,
 	nodoInicial(Base, Inicio),
 	busquedaPlan([], [Inicio], Objetivos, Base, Plan),
 	writeln('Plan encontrado:'),
-	imprimirLista(Plan),
+	imprimirLista(Plan), nl,
 	buscar(objeto([agenda], _, _, _), Base, objeto(N, A, P, R)),
 	reemplazar(objeto(N, A, P, R), objeto(N, A, Plan, R), Base, Base2),
 	filtrar(objetoSeLlama(diagnostico), Base2, Objetos),
