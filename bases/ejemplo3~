@@ -17,12 +17,17 @@
 	clase(bebida, comestible, [estante => e1], []),
 	clase(comida, comestible, [estante => e2], []),
 	clase(pan, comestible, [estante => e3], []),
+	clase(dulce, comestible, [estante =< e4], []),
 
-	objeto([cerveza1], bebida, [], []),
-	objeto([refresco1], bebida, [], []),
-	objeto([sopa1], comida, [], []),
-	objeto([cereal1], comida, [], []),
-	objeto([galletas1], pan, [], []),
+	objeto([cerveza], bebida, [], []),
+	objeto([refresco], bebida, [], []),
+	objeto([jugo], bebida, [], []),
+	objeto([sopa], comida, [], []),
+	objeto([cereal], comida, [], []),
+	objeto([galletas], pan, [], []),
+	objeto([brownies],pan, [], []),
+	objeto([gomitas],dulce, [], []),
+	objeto([chocolate],dulce, [], []),
 
 % Conocimiento factual --------------------------------------------------------
 	clase(acciones, top, [], []),
@@ -40,7 +45,10 @@
 	objeto([colocar], acciones_empleado, [], []),
 	objeto([mover], acciones_robot, [
 		costo => [[inicio, e1, 5], [inicio, e2, 5], [inicio, e3, 5],
-			[e1, e2, 15], [e2, e3, 15], [e3, e1, 15]],
+		      	 [inicio, e4, 5],[e1, e2, 15], [e2, e3, 15],[e3 , e4, 15],
+			 [e3, e1, 15],[e4, e1,15]
+			 ],
+			 
 		exito => [[nil, nil, 0.9]],
 		recompensa => 10
 	], []),
@@ -61,8 +69,8 @@
 	], []),
 	objeto([entregar], decisiones_robot, [], []),
 	objeto([reacomodar], decisiones_robot, [], []),
-	objeto([creencia], estados, [inicio => [], e1 => [cerveza1, refresco1], e2 => [sopa1, cereal1], e3 => [galletas1]], []),
-	objeto([reporte], estados, [inicio => [], e1 => [cerveza1, refresco1], e2 => [sopa1, cereal1], e3 => [galletas1]], []),
+	objeto([creencia], estados, [inicio => [], e1 => [cerveza1, refresco1,jugo1], e2 => [sopa1, cereal1], e3 => [galletas1,brownies1]], []),
+	objeto([reporte], estados, [inicio => [], e1 => [cerveza1, refresco1,jugo1], e2 => [sopa1, cereal1], e3 => [galletas1,brownies1]], []),
 	objeto([diagnostico], procesos, [], []),
 	objeto([decision], procesos, [], []),
 	objeto([agenda], procesos, [mover(inicio,e1)], []),
@@ -74,17 +82,18 @@
 	objeto([e1], ubicaciones, [visitado => false], []),
 	objeto([e2], ubicaciones, [visitado => false], []),
 	objeto([e3], ubicaciones, [visitado => false], []),
-
+	objeto([e4], ubicaciones, [visitado => false], []),
 	objeto([escenario], top, [
 		inicio => [],
-		e1 => [refresco1, cerveza1, sopa1],
-		e2 => [galletas1],
-		e3 => [cereal1]
+		e1 => [refresco1, cerveza1,brownies1],
+		e2 => [],
+		e3 => [cereal1,jugo1,galletas,sopa1],
+		e4 => [gomitas]
 	], []),
 	objeto([robot], top, [
 		brazo_derecho => nil,
 		brazo_izquierdo => nil,
 		posicion => inicio
 	], []),
-	objeto([orden], top, [refresco1], [])
+	objeto([orden], top, [sopa1], [])
 ].

@@ -1,0 +1,160 @@
+Welcome to SWI-Prolog (threaded, 64 bits, version 7.4.2)
+SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software.
+Please run ?- license. for legal details.
+
+For online help and background, visit http://www.swi-prolog.org
+For built-in help, use ?- help(Topic). or ?- apropos(Word).
+
+?- [main].
+true.
+
+?- main([ejemplo2]).
+Diagnóstico ==========================================================
+El estado de los estantes de acuerdo a mi diagnóstico es el siguiente:
+
+[e1=>[cerveza1,refresco1,jugo1],e2=>[sopa1,cereal1],e3=>[galletas1,brownies1]]
+
+Y se llevó a cabo mediante las siguientes acciones:
+
+mover(inicio,e1)
+colocar(cerveza1)
+colocar(refresco1)
+colocar(jugo1)
+mover(e1,e2)
+colocar(sopa1)
+colocar(cereal1)
+mover(e2,e3)
+colocar(galletas1)
+colocar(brownies1)
+mover(e3,inicio)
+
+
+Toma de decisión =====================================================
+El cliente ordenó los siguientes objetos:
+sopa1
+
+Los siguientes objetos están desordenados:
+
+Se tomaron las siguientes decisiones:
+entregar(sopa1)
+
+Planeación ===========================================================
+Los objetivos del plan son:
+entregar(sopa1)
+
+Plan encontrado:
+mover(inicio,e2)
+buscar(sopa1)
+agarrar(sopa1)
+mover(e2,inicio)
+colocar(sopa1)
+
+Ejecutando plan ======================================================
+mover(inicio,e2)		...éxito
+
+La observación del estante no coincide con la creencia.
+
+El costo de las acciones realizadas fue: 5
+
+Diagnóstico ==========================================================
+El estado de los estantes de acuerdo a mi diagnóstico es el siguiente:
+
+[e1=>[cereal1,sopa1,cerveza1,refresco1,jugo1],e2=>[],e3=>[galletas1,brownies1]]
+
+Y se llevó a cabo mediante las siguientes acciones:
+
+mover(inicio,e1)
+colocar(cereal1)
+colocar(sopa1)
+colocar(cerveza1)
+colocar(refresco1)
+colocar(jugo1)
+mover(e1,e3)
+colocar(galletas1)
+colocar(brownies1)
+mover(e3,inicio)
+
+
+Toma de decisión =====================================================
+El cliente ordenó los siguientes objetos:
+sopa1
+
+Los siguientes objetos están desordenados:
+cereal1
+sopa1
+
+Se tomaron las siguientes decisiones:
+entregar(sopa1)
+reacomodar(cereal1)
+
+Planeación ===========================================================
+Los objetivos del plan son:
+entregar(sopa1)
+reacomodar(cereal1)
+
+Plan encontrado:
+mover(e2,inicio)
+mover(inicio,e1)
+buscar(cereal1)
+agarrar(cereal1)
+buscar(sopa1)
+agarrar(sopa1)
+mover(e1,inicio)
+colocar(sopa1)
+mover(inicio,e2)
+colocar(cereal1)
+
+Ejecutando plan ======================================================
+mover(e2,inicio)		...éxito
+mover(inicio,e1)		...éxito
+
+La observación del estante no coincide con la creencia.
+
+El costo de las acciones realizadas fue: 10
+
+Diagnóstico ==========================================================
+El estado de los estantes de acuerdo a mi diagnóstico es el siguiente:
+
+[e2=>[],e1=>[refresco1,cerveza1,brownies1],e3=>[jugo1,sopa1,cereal1,galletas1]]
+
+Y se llevó a cabo mediante las siguientes acciones:
+
+mover(inicio,e1)
+colocar(refresco1)
+colocar(cerveza1)
+colocar(brownies1)
+mover(e1,e3)
+colocar(jugo1)
+colocar(sopa1)
+colocar(cereal1)
+colocar(galletas1)
+mover(e3,inicio)
+
+
+Toma de decisión =====================================================
+El cliente ordenó los siguientes objetos:
+sopa1
+
+Los siguientes objetos están desordenados:
+brownies1
+jugo1
+sopa1
+cereal1
+
+Se tomaron las siguientes decisiones:
+entregar(sopa1)
+reacomodar(brownies1)
+reacomodar(jugo1)
+reacomodar(cereal1)
+
+Planeación ===========================================================
+Los objetivos del plan son:
+entregar(sopa1)
+reacomodar(brownies1)
+reacomodar(jugo1)
+reacomodar(cereal1)
+
+  C-c C-cAction (h for help) ? e
+exit
+
+Process prolog finished

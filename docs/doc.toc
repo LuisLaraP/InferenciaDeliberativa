@@ -1,19 +1,24 @@
 \select@language {spanish}
 \contentsline {section}{\numberline {1}Funcionamiento del proyecto}{1}
 \contentsline {subsection}{\numberline {1.1}Carga de informaci\IeC {\'o}n}{1}
-\contentsline {subsection}{\numberline {1.2}Ejecuci\IeC {\'o}n}{1}
-\contentsline {subsubsection}{\numberline {1.2.1}Desde una terminal UNIX}{1}
-\contentsline {subsubsection}{\numberline {1.2.2}Desde el listener de Prolog}{1}
-\contentsline {section}{\numberline {2}Estructura de la base de conocimiento}{1}
-\contentsline {subsection}{\numberline {2.1}Conocimiento conceptual}{2}
-\contentsline {subsection}{\numberline {2.2}Conocimiento factual}{2}
-\contentsline {subsection}{\numberline {2.3}Conocimiento del mundo}{2}
-\contentsline {section}{\numberline {3}M\IeC {\'o}dulos}{2}
-\contentsline {subsection}{\numberline {3.1}Simulador}{2}
-\contentsline {subsection}{\numberline {3.2}M\IeC {\'o}dulo de diagn\IeC {\'o}stico}{2}
-\contentsline {subsubsection}{\numberline {3.2.1}Asignaci\IeC {\'o}n de productos}{2}
-\contentsline {subsubsection}{\numberline {3.2.2}B\IeC {\'u}squeda}{3}
-\contentsline {subsection}{\numberline {3.3}M\IeC {\'o}dulo de toma de decisi\IeC {\'o}n}{3}
-\contentsline {subsection}{\numberline {3.4}M\IeC {\'o}dulo de planeaci\IeC {\'o}n}{3}
-\contentsline {subsubsection}{\numberline {3.4.1}Ejemplo de ejecuci\IeC {\'o}n}{4}
-\contentsline {subsection}{\numberline {3.5}Utilitarios}{5}
+\contentsline {subsection}{\numberline {1.2}Ejecuci\IeC {\'o}n}{2}
+\contentsline {subsubsection}{\numberline {1.2.1}Desde una terminal UNIX}{2}
+\contentsline {subsubsection}{\numberline {1.2.2}Desde el listener de Prolog}{2}
+\contentsline {section}{\numberline {2}Aspectos interesantes del proyecto}{2}
+\contentsline {section}{\numberline {3}Estructura de la base de conocimiento}{2}
+\contentsline {subsection}{\numberline {3.1}Conocimiento conceptual}{2}
+\contentsline {subsection}{\numberline {3.2}Conocimiento factual}{2}
+\contentsline {subsection}{\numberline {3.3}Conocimiento del mundo}{3}
+\contentsline {section}{\numberline {4}M\IeC {\'o}dulos}{3}
+\contentsline {subsection}{\numberline {4.1}Simulador}{3}
+\contentsline {subsection}{\numberline {4.2}M\IeC {\'o}dulo de diagn\IeC {\'o}stico}{3}
+\contentsline {subsubsection}{\numberline {4.2.1}Asignaci\IeC {\'o}n de productos}{3}
+\contentsline {subsubsection}{\numberline {4.2.2}B\IeC {\'u}squeda}{3}
+\contentsline {subsection}{\numberline {4.3}M\IeC {\'o}dulo de toma de decisi\IeC {\'o}n}{4}
+\contentsline {subsubsection}{\numberline {4.3.1}Ejemplo de ejecuci\IeC {\'o}n}{4}
+\contentsline {subsection}{\numberline {4.4}M\IeC {\'o}dulo de planeaci\IeC {\'o}n}{4}
+\contentsline {subsubsection}{\numberline {4.4.1}Ejemplo de ejecuci\IeC {\'o}n}{5}
+\contentsline {section}{\numberline {5}Evidencia emp\IeC {\'\i }rica del funcionamiento del proyecto}{7}
+\contentsline {subsection}{\numberline {5.1}Ejemplos}{7}
+\contentsline {subsubsection}{\numberline {5.1.1}Problema similar al \emph {storyboard}}{7}
+\contentsline {subsubsection}{\numberline {5.1.2}Problema con m\IeC {\'a}s objetos}{7}
