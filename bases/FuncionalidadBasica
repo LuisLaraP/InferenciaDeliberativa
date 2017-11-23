@@ -1,0 +1,90 @@
+% =============================================================================
+% Universidad Nacional Autónoma de México
+% Posgrado en Ciencia e Ingeniería de la Computación
+%
+% Inteligencia Artificial
+% Proyecto 2 - Inferencia deliberativa
+%
+% Luis Alejandro Lara Patiño
+% Roberto Monroy Argumedo
+% Alejandro Ehecatl Morales Huitrón
+% =============================================================================
+
+[
+% Conocimiento conceptual -----------------------------------------------------
+	clase(top, nil, [], []),
+	clase(comestible, top, [], []),
+	clase(bebida, comestible, [estante => e1], []),
+	clase(comida, comestible, [estante => e2], []),
+	clase(pan, comestible, [estante => e3], []),
+
+	objeto([cerveza1], bebida, [], []),
+	objeto([refresco1], bebida, [], []),
+	objeto([sopa1], comida, [], []),
+	objeto([cereal1], comida, [], []),
+	objeto([galletas1], pan, [], []),
+
+% Conocimiento factual --------------------------------------------------------
+	clase(acciones, top, [], []),
+	clase(acciones_empleado, acciones, [], []),
+	clase(acciones_robot, acciones, [], []),
+	clase(decisiones_robot, acciones, [], []),
+	clase(estados, top, [], []),
+	clase(observaciones, estados,[], []),
+
+
+
+	clase(procesos, top, [], []),
+
+	objeto([mover], acciones_empleado, [], []),
+	objeto([colocar], acciones_empleado, [], []),
+	objeto([mover], acciones_robot, [
+		costo => [[inicio, e1, 5], [inicio, e2, 5], [inicio, e3, 5],
+			[e1, e2, 15], [e2, e3, 15], [e3, e1, 15]],
+		exito => [[nil, nil, 0.9]],
+		recompensa => 10
+	], []),
+	objeto([buscar], acciones_robot, [
+		costo => [[nil, 2]],
+		exito => [[nil, 0.9]],
+		recompensa => 5
+	], []),
+	objeto([agarrar], acciones_robot, [
+		costo => [[nil, 3]],
+		exito => [[nil, 0.7]],
+		recompensa => 15
+	], []),
+	objeto([colocar], acciones_robot, [
+		costo => [[nil, 3]],
+		exito => [[nil, 0.8]],
+		recompensa => 15
+	], []),
+	objeto([entregar], decisiones_robot, [], []),
+	objeto([reacomodar], decisiones_robot, [], []),
+	objeto([creencia], estados, [inicio => [], e1 => [cerveza1, refresco1], e2 => [sopa1, cereal1], e3 => [galletas1]], []),
+	objeto([reporte], estados, [inicio => [], e1 => [cerveza1, refresco1], e2 => [sopa1, cereal1], e3 => [galletas1]], []),
+	objeto([diagnostico], procesos, [], []),
+	objeto([decision], procesos, [], []),
+	objeto([agenda], procesos, [mover(inicio,e1)], []),
+
+% Mundo -----------------------------------------------------------------------
+	clase(ubicaciones, top, [], []),
+
+	objeto([inicio], ubicaciones, [visitado => true], []),
+	objeto([e1], ubicaciones, [visitado => false], []),
+	objeto([e2], ubicaciones, [visitado => false], []),
+	objeto([e3], ubicaciones, [visitado => false], []),
+
+	objeto([escenario], top, [
+		inicio => [],
+		e1 => [refresco1, cerveza1, sopa1],
+		e2 => [cereal1],
+		e3 => [galletas1]
+	], []),
+	objeto([robot], top, [
+		brazo_derecho => nil,
+		brazo_izquierdo => nil,
+		posicion => inicio
+	], []),
+	objeto([orden], top, [refresco1], [])
+].
