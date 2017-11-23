@@ -142,6 +142,34 @@ lugar.
 
 \subsection{Módulo de toma de decisión}
 
+Una vez que el módulo de diagnóstico ha actualizado la creencia de acuerdo a las observaciones, el módulo de decisión se encarga de revisar las órdenes del cliente y las inconsistencias en la tienda para generar objetivos a cumplir.
+
+En primer lugar, este módulo revisa las órdenes del cliente, y crea objetivos para cumplirlas. A continuación, revisa los objetos en la creencia del robot para detectar cuáles están fuera de lugar, y crea objetivos para reacomodarlos.
+
+Finalmente, el módulo de toma de decisión organiza los objetivos de manera que se le dé prioridad a las peticiones del cliente. Después de satisfacer las órdenes del cliente, el robot puede dedicarse a reordenar los objetos que estén fuera de lugar.
+
+Ahora bien, puede suceder que este módulo sea ejecutado después de que el robot falló al ejecutar una acción, por lo que algunos objetivos podrían haberse cumplido, o el robot podría tener objetos en sus brazos. Para resolver estas situaciones, el módulo de toma de decisión verifica la lista de objetivos generados para ver si alguno ya se cumplió, y si es así, lo elimina de la lista. Adicionalmente, se crean objetivos de reacomodar para los objetos que el robot tiene en brazos. Como último paso de procesamiento, se eliminan aquellos objetivos que tienen una instancia de entregar y una de reacomodar con el mismo objeto, dejando sólo la de entregar.
+
+\subsection{Ejemplo de ejecución}
+
+Considérese el caso en el cual se tienen tres estantes; el primero de bebidas, el segundo de comida y por último el estante de pan. En dichos estantes se reparten los objetos que se muestran en el cuadro~\ref{tab:EjemploDecision}. Además, el cliente ha pedido que se le entregue el refresco. Se observa que la mayoría de los objetos están en los estantes adecuados, con excepción de la sopa y el cereal, que deberían estar en el estante 2.
+
+\begin{table}
+    \centering
+    \caption{Disposición inicial de objetos.}
+    \label{tab:EjemploDecision}
+    \begin{tabular}{c | c | c}
+        Estante 1 & Estante 2 & Estante 3 \\
+        (bebidas) & (comida) & (pan) \\
+        \hline \\
+        refresco & & galletas \\
+        cerveza & & cereal \\
+        sopa & &
+    \end{tabular}
+\end{table}
+
+De acuerdo a esta información, el módulo de decisión intenta satisfacer primero las órdenes del cliente y establece el objetivo \texttt{entregar(refresco)}. Posteriormente, detectará que tanto la sopa como el cereal están fuera de lugar y creará los objetivos \texttt{reacomodar(sopa)} y \texttt{reacomodar(cereal)}. Finalmente, el módulo organizará el orden de los objetivos para que el robot pueda pasar por dos objetos que se encuentren en le mismo estante. En este caso, pondrá el objetivo \texttt{reacomodar(sopa)} inmediatamente después de \texttt{entregar(refresco)}.
+
 \subsection{Módulo de planeación}
 
 La entrada al módulo de planeación son las decisiones que se tomaron en el módulo anterior. Éstas son los objetivos que debe cumplir el plan generado por este módulo.

@@ -33,7 +33,7 @@
 	clase(observaciones, estados,[], []),
 
 
-	
+
 	clase(procesos, top, [], []),
 
 	objeto([mover], acciones_empleado, [], []),
@@ -41,30 +41,28 @@
 	objeto([mover], acciones_robot, [
 		costo => [[inicio, e1, 5], [inicio, e2, 5], [inicio, e3, 5],
 			[e1, e2, 15], [e2, e3, 15], [e3, e1, 15]],
-		exito => [[_, _, 0.9]],
+		exito => [[nil, nil, 0.9]],
 		recompensa => 10
 	], []),
 	objeto([buscar], acciones_robot, [
-		costo => [[_, 2]],
-		exito => [[_, 0.9]],
+		costo => [[nil, 2]],
+		exito => [[nil, 0.9]],
 		recompensa => 5
 	], []),
 	objeto([agarrar], acciones_robot, [
-		costo => [[_, 3]],
-		exito => [[_, 0.7]],
+		costo => [[nil, 3]],
+		exito => [[nil, 0.7]],
 		recompensa => 15
 	], []),
 	objeto([colocar], acciones_robot, [
-		costo => [[_, 3]],
-		exito => [[_, 0.8]],
+		costo => [[nil, 3]],
+		exito => [[nil, 0.8]],
 		recompensa => 15
 	], []),
 	objeto([entregar], decisiones_robot, [], []),
 	objeto([reacomodar], decisiones_robot, [], []),
-	objeto([reporte], estados, [inicio=>[],e1=>[refresco1,cerveza1],e2=>[],e3=>[pan]], []),
-	objeto([creencia],estados,[inicio=>[],e1=>[refresco1,cerveza1],e2=>[cereal1],e3=>[pan]],[]),
-
-
+	objeto([creencia], estados, [inicio => [], e1 => [cerveza1, refresco1], e2 => [sopa1, cereal1], e3 => [galletas1]], []),
+	objeto([reporte], estados, [inicio => [], e1 => [cerveza1, refresco1], e2 => [sopa1, cereal1], e3 => [galletas1]], []),
 	objeto([diagnostico], procesos, [], []),
 	objeto([decision], procesos, [], []),
 	objeto([agenda], procesos, [mover(inicio,e1)], []),
@@ -72,10 +70,10 @@
 % Mundo -----------------------------------------------------------------------
 	clase(ubicaciones, top, [], []),
 
-	objeto([inicio], ubicaciones, [], []),
-	objeto([e1], ubicaciones, [], []),
-	objeto([e2], ubicaciones, [], []),
-	objeto([e3], ubicaciones, [], []),
+	objeto([inicio], ubicaciones, [visitado => true], []),
+	objeto([e1], ubicaciones, [visitado => false], []),
+	objeto([e2], ubicaciones, [visitado => false], []),
+	objeto([e3], ubicaciones, [visitado => false], []),
 
 	objeto([escenario], top, [
 		inicio => [],

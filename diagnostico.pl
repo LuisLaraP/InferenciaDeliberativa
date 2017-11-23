@@ -26,7 +26,7 @@ diagnostico(Base, NuevaBase):-
 	writeln("El estado de los estantes de acuerdo a mi diagnóstico es el siguiente:\n"),
 	writeln(NuevaCreencia),
 	writeln("\nY se llevó a cabo mediante las siguientes acciones:\n"),
-	write(S),
+	imprimirLista(S),
 	writeln("\n").
 
 
@@ -41,12 +41,12 @@ observacionesActuales([_|T],L):-
 	observacionesActuales(T,L).
 
 
-% Busca en la base actual la creencia del acomodo de los 
-% productos en los estantes. 
+% Busca en la base actual la creencia del acomodo de los
+% productos en los estantes.
 % Al inicio del simulador esa creencia es el orden según
 % el reporte del asistente.
 %    Arg. 1 - La base de conocimiento.
-%    Arg. 2 - Lista con la creencia del acomodo de los 
+%    Arg. 2 - Lista con la creencia del acomodo de los
 %             productos en los estantes.
 creenciaActual(Base,Creencia) :-
 	buscar(objeto([reporte],_,Creencia,_),Base,C),
@@ -57,7 +57,7 @@ creenciaActual(objeto(_,_,Obs,_),Obs).
 
 % Dada una lista de observaciones y una creencia,
 % la actualiza en el orden en que se van analizando
-% las observaciones. 
+% las observaciones.
 %    Arg. 1 - La lista de observaciones.
 %    Arg. 2 - La creencia.
 %    Arg. 3 - La creencia actualizada
@@ -84,7 +84,7 @@ asignarPosiciones(L,Creencia,NuevaCreencia):-
 
 
 % Dada una observación (ei => [...]) y una creencia,
-% primero compara los productos que difieran en ei. 
+% primero compara los productos que difieran en ei.
 % Los que están perdidos los acomoda en otros estantes
 % aleatoriamente; los que no se sabía que estaban ahí,
 % primero se verifica si no están en otro lado, en caso
@@ -102,7 +102,7 @@ mezcla(Estante => ContenidoObs, Creencia, NuevaCreencia):-
 
 
 % Reparte aleatoriamente productos que no están en
-% su lugar (no se toma en cuenta el estante donde 
+% su lugar (no se toma en cuenta el estante donde
 % se encontraron)
 %    Arg. 1 - El estante que se va a ignorar.
 %    Arg. 2 - Lista de productos a acomodar.
@@ -116,7 +116,7 @@ repartePerdidos(Ignorado,[X|T],L,N):-
 
 repartePerdidosAux(Ignorado,X,L,N):-
 	nth1(Indice,L,Ignorado => Cont,P),
-	random_member(E=>C,P),	
+	random_member(E=>C,P),
 	select(E=>C,P,E=>[X|C],I),
 	nth1(Indice,N,Ignorado => Cont,I),!.
 
@@ -135,7 +135,7 @@ eliminaNoPresentes(Ignorado,B,L,N):-
 	nth1(Indice,L,Ignorado => Cont,P),
 	borraDeListaUbicaciones(B,P,I),
 	nth1(Indice,N,Ignorado => Cont,I),!.
-	
+
 
 
 % Obtiene lista de locaciones actual
@@ -159,7 +159,7 @@ quitaVacios([X=>Y|T],[X=>Y|C]):-
 	quitaVacios(T,C).
 
 transformar([inicio=>[],X=>Y|T],[mover(inicio,X)|C]):-
-	escribirObjetos(Y,YS),	
+	escribirObjetos(Y,YS),
 	transformar(X,T,R),
 	concatena(YS,R,C),!.
 
@@ -169,7 +169,7 @@ transformar(X,[Y=>Z|T],[mover(X,Y)|C]):-
 	escribirObjetos(Z,ZS),
 	transformar(Y,T,R),
 	concatena(ZS,R,C),!.
-	
+
 escribirObjetos([],[]).
 
 escribirObjetos([H|T],[colocar(H)|C]):-
@@ -177,12 +177,12 @@ escribirObjetos([H|T],[colocar(H)|C]):-
 
 
 
-	
+
 % Utilidades--------------------------------------------------------
-	
+
 % Dado un estante ei y una lista de estantes, devuelve
-% su lista de productos. 
-% En este caso buscamos valores asociados con el 
+% su lista de productos.
+% En este caso buscamos valores asociados con el
 % operador flecha "=>"
 valorFlecha(X,[X=>Y|_],Y).
 valorFlecha(X,[F=>_|T],R):-
@@ -191,7 +191,7 @@ valorFlecha(X,[F=>_|T],R):-
 
 
 % Introduce una observación (ei => [..])  dentro de
-% una lista de estados, el único estado que cambia   
+% una lista de estados, el único estado que cambia
 % es ei.
 %    Arg. 1 - La observación.
 %    Arg. 2 - La lista de estados..
@@ -212,7 +212,7 @@ eliminaDeLista(H,[H|L],R):-
 eliminaDeLista(X,[H|L1],[H|L2]):-
 	X \= H, eliminaDeLista(X,L1,L2),!.
 
-% Elimina todas las ocurrecias de los elementos de 
+% Elimina todas las ocurrecias de los elementos de
 % una lista en otra
 eliminaVariosDeLista([],L,L).
 
@@ -220,7 +220,7 @@ eliminaVariosDeLista([H|T],L,R):-
 	eliminaDeLista(H,L,N),
 	eliminaVariosDeLista(T,N,R),!.
 
-% Elimina todas las ocurrecias de los elementos de 
+% Elimina todas las ocurrecias de los elementos de
 % una lista en una lista de ubicaciones de nuestra
 % base.
 borraDeListaUbicaciones(_,[],[]).

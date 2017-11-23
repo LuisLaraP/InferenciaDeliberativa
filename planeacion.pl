@@ -18,11 +18,11 @@
 planeacion(Base, NuevaBase) :-
 	propiedadesObjeto(decision, Base, Objetivos),
 	writeln('Los objetivos del plan son:'),
-	imprimirLista(Objetivos),
+	imprimirLista(Objetivos), nl,
 	nodoInicial(Base, Inicio),
 	busquedaPlan([], [Inicio], Objetivos, Base, Plan),
 	writeln('Plan encontrado:'),
-	imprimirLista(Plan),
+	imprimirLista(Plan), nl,
 	buscar(objeto([agenda], _, _, _), Base, objeto(N, A, P, R)),
 	reemplazar(objeto(N, A, P, R), objeto(N, A, Plan, R), Base, Base2),
 	filtrar(objetoSeLlama(diagnostico), Base2, Objetos),
@@ -39,18 +39,10 @@ busquedaPlan(Blancos, Grises, Objetivos, Base, Plan) :-
 	expandirNodo(Maximo, Acciones, Base, Sucesores),
 	concatena(Grises2, Sucesores, Grises3),
 	objetivosCumplidos(Maximo, Objetivos, Base, Cumplidos),
-	(Cumplidos == []
-	->	NBlancos = Blancos2,
-		NGrises = Grises3,
-		NObjetivos = Objetivos,
-		PlanActual = []
-	;	eliminarTodos(Cumplidos, Objetivos, NObjetivos),
-		NBlancos = [],
-		Maximo = nodo(_, PlanActual, S),
-		NGrises = [nodo(S, [], S)]
-	),
-	busquedaPlan(NBlancos, NGrises, NObjetivos, Base, SigPlan),
-	concatena(PlanActual, SigPlan, Plan).
+	(sonIguales(Objetivos, Cumplidos)
+	->	Maximo = nodo(_, Plan, _)
+	;	busquedaPlan(Blancos2, Grises3, Objetivos, Base, Plan)
+	).
 
 expandirNodo(_, [], _, []).
 expandirNodo(Nodo, [[A] | As], Base, Sucesores) :-
@@ -64,8 +56,24 @@ maximaRecompensa([G | Gs], Objetivos, Base, Maximo, Recompensa) :-
 	maximaRecompensa(Gs, Objetivos, Base, SigMax, SigRec),
 	recompensa(G, Objetivos, Base, Actual),
 	(Actual > SigRec
-	-> Maximo = G, Recompensa = Actual
-	; Maximo = SigMax, Recompensa = SigRec
+	->	Maximo = G, Recompensa = Actual
+	;	(Actual == SigRec
+		->	minimoCosto([G, SigMax], Base, Maximo, _),
+			recompensa(Maximo, Objetivos, Base, Recompensa)
+		;	Maximo = SigMax, Recompensa = SigRec
+		)
+	).
+
+minimoCosto([nodo(I, A, F)], Base, nodo(I, A, F), Costo) :-
+	costoCamino(A, Base, Costo).
+minimoCosto([nodo(I, A, F) | Ls], Base, Min, Costo) :-
+	minimoCosto(Ls, Base, MinSig, CostoSig),
+	costoCamino(A, Base, CostoActual),
+	(CostoActual < CostoSig
+	->	Min = nodo(I, A, F),
+		Costo = CostoActual
+	;	Min = MinSig,
+		Costo = CostoSig
 	).
 
 objetivosCumplidos(_, [], _, []).
@@ -188,37 +196,26 @@ calcularSucesores(nodo(I, A, Estado), [mover(Inicio, Fin) | As], [nodo(I, A2, S)
 costoCamino([], _, 0).
 costoCamino([C | Cs], Base, Costo) :-
 	costoCamino(Cs, Base, Costo2),
-	costoAccion(C, Base, Costo1),
+	costo(C, Base, Costo1),
 	Costo is Costo1 + Costo2.
-
-costoAccion(nil, _, 0).
-costoAccion(Accion, Base, Costo) :-
-	Accion =.. [Nombre | Args],
-	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
-	buscar(costo => _, Props, _ => Costos),
-	agregar(Costo, Args, PatronCosto),
-	buscar(PatronCosto, Costos, _), !.
-costoAccion(Accion, Base, Costo) :-
-	Accion =.. [Nombre | Args],
-	buscar(objeto([Nombre], acciones_robot, _, _), Base, objeto(_, _, Props, _)),
-	buscar(costo => _, Props, _ => Costos),
-	invertir(Args, Args2),
-	agregar(Costo, Args2, PatronCosto),
-	buscar(PatronCosto, Costos, _).
 
 recompensa(nodo(_, [], _), _, _, 0).
 recompensa(nodo(_, Acciones, _), Objetivos, Base, Recompensa) :-
 	invertir(Acciones, [Ultima, Penultima | AccionesInv]), !,
 	recompensaAccion(Ultima, AccionesInv, Objetivos, Base, RecBase),
+	probExito(Ultima, Base, P),
+	RecExito is RecBase * P,
 	Ultima =.. [NomUlt | _],
 	Penultima =.. [NomPen | _],
 	(NomUlt == NomPen
-	->	Recompensa is RecBase / 2
-	;	Recompensa is RecBase
+	->	Recompensa is RecExito / 2
+	;	Recompensa is RecExito
 	).
 recompensa(nodo(_, Acciones, _), Objetivos, Base, Recompensa) :-
 	invertir(Acciones, [Ultima | AccionesInv]),
-	recompensaAccion(Ultima, AccionesInv, Objetivos, Base, Recompensa).
+	recompensaAccion(Ultima, AccionesInv, Objetivos, Base, RecBase),
+	probExito(Ultima, Base, P),
+	Recompensa is RecBase * P.
 
 recompensaAccion(Accion, ListaAcciones, _, _, 0) :-
 	estaEn(ListaAcciones, Accion), !.
