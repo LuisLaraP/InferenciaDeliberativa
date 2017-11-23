@@ -10,86 +10,69 @@
 % Alejandro Ehecatl Morales Huitrón
 % =============================================================================
 
-:- op(800, xfx, '=>').
+%:- op(800, xfx, '=>').
 
+
+%:-['conceptual/consultas'].
+%:-['conceptual/listas'].
+%:-['conceptual/modificar'].
+%:-['conceptual/operaciones'].
+%:-['conceptual/utilidades'].
+
+
+%leerBase(X) :- open('bases/ejemplo', read, Archivo), read(Archivo, X),close(Archivo).
+
+%escribeBase(X) :- open('bases/salida', write, Archivo), writeq(Archivo, X), put_char(Archivo, .), close(Archivo).
+	
 % Módulo de toma de decisiones.
 %	Arg. 1 - Base de entrada.
 %	Arg. 2 - Base de salida.
-decision(Base, NuevaBase) :-
-	propiedadesObjeto(orden, Base, ObjsEntrega),
-	writeln('El cliente ordenó los siguientes objetos:'),
-	imprimirLista(ObjsEntrega), nl,
-	objetosDesordenados(Base, Desordenados),
-	writeln('Los siguientes objetos están desordenados:'),
-	imprimirLista(Desordenados), nl,
-	expandirEntregas(ObjsEntrega, Entregas),
-	expandirDesordenados(Desordenados, DecDesorden),
-	objetosAgarrados(Base, Agarrados),
-	(Agarrados == []
-	;	writeln('El robot tiene los siguientes objetos en brazos:'),
-		imprimirLista(Agarrados), nl
-	),
-	expandirDesordenados(Agarrados, DecAgarrados),
-	concatena(DecDesorden, DecAgarrados, Reacomodos),
-	fusionarObjetivos(Entregas, Reacomodos, DecBase),
-	filtrar(decisionCumplida(Base), DecBase, Cumplidas),
-	eliminarTodos(Cumplidas, DecBase, Decisiones),
-	writeln('Se tomaron las siguientes decisiones:'),
-	imprimirLista(Decisiones), nl,
-	buscar(objeto([decision], _, _, _), Base, objeto(_, A, P, R)),
-	reemplazar(
-		objeto([decision], A, P, R),
-		objeto([decision], A, Decisiones, R),
-		Base, NuevaBase
-	).
+decision(KB, NKB) :- pedido(KB, P), escribirPedido(P, KB, TKB), ordenar(TKB, O),  eliminaPedidoRep(P, O, TO),escribirOrdenar(TO, TKB, NKB).
 
-expandirEntregas([], []).
-expandirEntregas([E | Es], [entregar(E) | Rs]) :-
-	expandirEntregas(Es, Rs).
+% Escribe la decisión en la base de conocimiento de los productos que se van a entregar al cliente.
+escribirPedido(L, KB, NKB) :- filtrar(objetoSeLlama(entregar), KB, NL), eliminarTodos(NL, KB, TKB), agregar(objeto([entregar], decisiones_robot, L, []), TKB, NKB).
 
-expandirDesordenados([], []).
-expandirDesordenados([D | Ds], [reacomodar(D) | Rs]) :-
-	expandirDesordenados(Ds, Rs).
+% Escribe la decisión en la base de conocimiento de los productos que se van a ordenar en los estantes.
+escribirOrdenar(L, KB, NKB) :- filtrar(objetoSeLlama(reacomodar), KB, NL), eliminarTodos(NL, KB, TKB), agregar(objeto([reacomodar], decisiones_robot, L, []), TKB, NKB).
 
-fusionarObjetivos([], Reacomodos, Reacomodos).
-fusionarObjetivos([entregar(O) | Es], Reacomodos, [entregar(O) | Rs]) :-
-	fusionarObjetivos(Es, Reacomodos, Rsig),
-	eliminar(reacomodar(O), Rsig, Rs).
+% Obtiene el pedido del cliente.
+pedido(KB, P) :- propiedadesObjeto(orden, KB, P).
 
-objetosAgarrados(Base, Objetos) :-
-	propiedadesObjeto(robot, Base, Props),
-	buscar(brazo_derecho => _, Props, _ => Der),
-	buscar(brazo_izquierdo => _, Props, _ => Izq),
-	eliminar(nil, [Der, Izq], Objetos).
+ordenar(KB, P) :- fueraDeLugar(KB, R), aLista(R, P).
 
-objetosDesordenados(Base, Objetos) :-
-	propiedadesObjeto(creencia, Base, Creencia),
-	concatenarUbicaciones(Creencia, Todos),
-	filtrar(ubicacionIncorrecta(Base), Todos, Objetos).
+aLista([],[]).
+aLista([(A, _, _) | T], [A | NT]) :- aLista(T, NT).
 
-concatenarUbicaciones([], []).
-concatenarUbicaciones([inicio => _ | Us], R) :-
-	concatenarUbicaciones(Us, R), !.
-concatenarUbicaciones([_ => Objetos | Us], R) :-
-	concatenarUbicaciones(Us, Rsig),
-	concatena(Objetos, Rsig, R).
+eliminaPedidoRep([], A, A).
+eliminaPedidoRep([H | P], O, NO) :- eliminaPedidoAux(H, O, TO), eliminaPedidoRep(P, TO, NO).
 
-ubicacionIncorrecta(Base, Objeto) :-
-	propiedadesObjetoHerencia(Objeto, Base, Props),
-	buscar(estante => _, Props, _ => Estante),
-	\+ ubicacionObjeto(Objeto, Base, Estante).
+eliminaPedidoAux(_, [], []).
+eliminaPedidoAux(H, [H | T], NT) :- eliminaPedidoAux(H, T, NT).
+eliminaPedidoAux(H, [S | T], [S | NT]) :-  eliminaPedidoAux(H, T, NT).
+	
+fueraDeLugar(KB, R) :- propiedadesObjeto(creencia, KB, L), procesaPropiedades(L, C), comparaCreencia(C, KB, A), eliminaCor(A, R).
 
-decisionCumplida(Base, entregar(Objeto)) :-
-	propiedadesObjeto(creencia, Base, Creencia),
-	buscar(inicio => _, Creencia, _ => Entregados),
-	estaEn(Entregados, Objeto),
-	write('El objetivo '),
-	write(entregar(Objeto)),
-	writeln(' ya se cumplió.').
-decisionCumplida(Base, reacomodar(Objeto)) :-
-	propiedadesObjetoHerencia(Objeto, Base, Props),
-	buscar(estante => _, Props, _ => Estante),
-	ubicacionObjeto(Objeto, Base, Estante),
-	write('El objetivo '),
-	write(entregar(Objeto)),
-	writeln(' ya se cumplió.').
+procesaPropiedades([], []).
+procesaPropiedades([H | T], L) :- procesaPropiedades(T, L1), procesaEstante(H, L2), append(L2, L1, L).
+
+procesaEstante(_ => [], []).
+procesaEstante(X => [H | T], [(H,X)| NT]) :- procesaEstante(X => T, NT).
+
+comparaCreencia([], _, []).
+comparaCreencia([(O, E) | T], KB, [(O, E, P) | NT]) :- obtenEstante(O, KB, P), comparaCreencia(T, KB, NT).
+
+obtenEstante(O, KB, E) :- filtrar(objetoSeLlama(O), KB, [objeto(_, C,_,_)|_]), propiedadesClase(C, KB, P), estante(P, E).
+	
+estante([estante => Est | _], Est).
+estante([_ | L], Est) :- estante(L, Est).
+
+eliminaCor([], []).
+eliminaCor([(_, B, B) | T], NT) :- eliminaCor(T, NT).
+eliminaCor([A | T], [A | NT]) :- eliminaCor(T, NT).
+
+eliminaPedido([], A, A).
+eliminaPedido([O | P], F, NP) :- eliminaFL(O, F, R), eliminaPedido(P, R, NP).
+
+eliminaFL(_, [], []).
+eliminaFL(O, [(O,_,_) | T], NT) :- eliminaFL(T, NT).
+eliminaFL(_, [A | T], [A | NT]) :- eliminaFL(T, NT). 
